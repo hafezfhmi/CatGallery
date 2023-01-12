@@ -1,3 +1,4 @@
+const fs = require("fs");
 const cloudinary = require("../utils/cloudinaryUpload");
 const Image = require("../models/image");
 
@@ -18,6 +19,12 @@ exports.postImage = async (req, res, next) => {
       height: 1000,
       crop: "limit",
       folder: "catGallery/image",
+    });
+
+    fs.unlink(file.path, (err) => {
+      if (err) {
+        console.err(err);
+      }
     });
 
     const imageUrl = uploadedFile.secure_url;
