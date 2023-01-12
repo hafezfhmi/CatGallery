@@ -1,11 +1,5 @@
-const cloudinary = require("cloudinary").v2;
+const cloudinary = require("../utils/cloudinaryUpload");
 const Image = require("../models/image");
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 exports.postImage = async (req, res, next) => {
   try {
@@ -18,9 +12,15 @@ exports.postImage = async (req, res, next) => {
         .json({ msg: "No image is inserted. Please upload an image." });
     }
 
-    await cloudinary.uploader.upload(file.path);
+    const uploadedFile = await cloudinary.uploader.upload(file.path, {
+      quality: 60,
+      width: 2000,
+      height: 1000,
+      crop: "limit",
+      folder: "catGallery/image",
+    });
 
-    const imageUrl = file.path;
+    const imageUrl = uploadedFile.secure_url;
 
     const createdImage = await Image.create({
       title,
