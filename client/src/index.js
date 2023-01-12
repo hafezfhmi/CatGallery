@@ -17,6 +17,7 @@ import Login from "./routes/Login";
 import Signup from "./routes/Signup";
 import Home from "./routes/Home";
 import Gallery from "./routes/Gallery";
+import Upload from "./routes/Upload";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
         <Route path="gallery" element={<Gallery />} />
+        <Route path="upload" element={<Upload />} />
       </Route>
     </>
   )

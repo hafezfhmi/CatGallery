@@ -2,7 +2,16 @@ const Image = require("../models/image");
 
 exports.postImage = async (req, res, next) => {
   try {
-    const { title, description, imageUrl } = req.body;
+    const { title, description } = req.body;
+    const { file } = req;
+
+    if (!file) {
+      return res
+        .status(422)
+        .json({ msg: "No image is inserted. Please upload an image." });
+    }
+
+    const imageUrl = file.path;
 
     const createdImage = await Image.create({
       title,
@@ -11,8 +20,8 @@ exports.postImage = async (req, res, next) => {
       userId: req.session.user.id,
     });
 
-    res.status(201).json(createdImage);
+    return res.status(201).json(createdImage);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
