@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./upload.module.css";
-import ImageUpload from "../../components/ImageUpload";
+import ImageUploadForm from "../../components/ImageUploadForm";
 
 const Upload = () => {
   return (
     <div className={styles.upload}>
-      <ImageUpload />
+      <ImageUploadForm />
     </div>
   );
 };

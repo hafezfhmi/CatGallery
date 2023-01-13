@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { useField } from "../../hooks/index";
-import styles from "./imageUpload.module.css";
+import styles from "./imageUploadForm.module.css";
+import FileDrop from "../fileDrop";
+import { useFileDrop } from "../../hooks/index";
 
-const ImageUpload = () => {
-  const [file, setFile] = useState(null);
-
+const ImageUploadForm = () => {
   const title = useField("text", "title");
   const description = useField("", "description");
-
-  console.log(description.attributes.value);
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const fileDrop = useFileDrop();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +19,7 @@ const ImageUpload = () => {
         {
           title: title.attributes.value,
           description: description.attributes.value,
-          file,
+          file: fileDrop.value,
         },
         {
           withCredentials: true,
@@ -37,13 +32,14 @@ const ImageUpload = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={styles.ImageUpload} onSubmit={handleSubmit}>
+      <FileDrop fileDrop={fileDrop} />
+      <img src={fileDrop.value} alt="test" />
       <input {...title.attributes} />
       <textarea {...description.attributes} />
-      <input type="file" onChange={handleFileChange} />
       <button type="submit">Upload</button>
     </form>
   );
 };
 
-export default ImageUpload;
+export default ImageUploadForm;
