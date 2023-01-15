@@ -2,7 +2,7 @@
   position: relative;
   left: -2rem;
   padding: 2rem;
-  width: 100%;
+  width: calc(100% + 4rem);
   overflow: hidden;
 }
 
@@ -16,7 +16,6 @@
 }
 
 .testimonialCard {
-  box-sizing: border-box;
   flex: 0 0 30%;
 
   display: flex;

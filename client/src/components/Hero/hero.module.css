@@ -82,7 +82,7 @@
   bottom: 4rem;
   padding: 1rem;
   border-radius: 0.6rem;
-  width: 10rem;
+  width: 12rem;
 }
 
 .heroReview > p {
@@ -161,6 +161,7 @@
   padding: 0.6rem;
   background-color: rgb(255, 243, 25);
   border-radius: 0.5rem;
+  box-sizing: content-box;
 }
 
 .likes > path {
@@ -188,8 +189,7 @@
   .heroImgBg {
     position: relative;
     top: 0;
-    padding: 0 2rem;
-    width: 100%;
+    width: calc(100% + 4rem);
     height: 16rem;
     border-radius: 0;
   }

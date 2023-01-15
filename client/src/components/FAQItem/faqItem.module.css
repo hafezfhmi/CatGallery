@@ -35,7 +35,6 @@
 }
 
 .answer {
-  box-sizing: border-box;
   height: 0;
   overflow: hidden;
   width: 95%;
