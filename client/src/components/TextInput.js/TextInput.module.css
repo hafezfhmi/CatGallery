@@ -5,7 +5,12 @@
   row-gap: 0.6rem;
 }
 
-.inputWrapper > input {
+.inputWrapper > textarea {
+  resize: none;
+}
+
+.textInput {
+  width: 100%;
   padding: 0.6rem;
   font-size: 1.2rem;
   background-color: #fff;
@@ -14,7 +19,7 @@
   outline: none;
 }
 
-.inputWrapper > input:focus {
+.textInput:focus {
   border: 2px solid rgba(0, 0, 0, 0.8);
 }
 
