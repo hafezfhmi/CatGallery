@@ -1,9 +1,11 @@
 import React from "react";
-import axios from "axios";
 import { useField } from "../../hooks/index";
-import styles from "./imageUploadForm.module.css";
-import FileDrop from "../fileDrop";
 import { useFileDrop } from "../../hooks/index";
+import FileDrop from "../fileDrop";
+import TextInput from "../TextInput.js";
+import Button from "../Button";
+import imageService from "../../services/images";
+import styles from "./imageUploadForm.module.css";
 
 const ImageUploadForm = () => {
   const title = useField("text", "title");
@@ -14,30 +16,26 @@ const ImageUploadForm = () => {
     e.preventDefault();
 
     try {
-      await axios.post(
-        "http://localhost:3001/image",
-        {
-          title: title.attributes.value,
-          description: description.attributes.value,
-          file: fileDrop.value,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+      await imageService.create(
+        title.attributes.value,
+        description.attributes.value,
+        fileDrop.value.image
       );
-    } catch (error) {}
+    } catch (error) {
+      // TODO: ERROR HANDLING
+    }
   };
 
   return (
-    <form className={styles.ImageUpload} onSubmit={handleSubmit}>
-      <FileDrop fileDrop={fileDrop} />
-      <img src={fileDrop.value} alt="test" />
-      <input {...title.attributes} />
-      <textarea {...description.attributes} />
-      <button type="submit">Upload</button>
+    <form className={styles.imageUploadForm} onSubmit={handleSubmit}>
+      <div className={styles.fileDropWrapper}>
+        <FileDrop fileDrop={fileDrop} />
+      </div>
+      <div className={styles.inputWrapper}>
+        <TextInput field={title} label="Title" />
+        <TextInput field={description} label="Description" type="textarea" />
+        <Button label="Upload" style={{ marginTop: "1.2rem", width: "100%" }} />
+      </div>
     </form>
   );
 };

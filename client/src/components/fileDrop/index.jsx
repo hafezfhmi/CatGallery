@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { BiUpload } from "react-icons/bi";
 import styles from "./fileDrop.module.css";
 
 const FileDrop = ({ fileDrop }) => {
@@ -14,8 +15,11 @@ const FileDrop = ({ fileDrop }) => {
       onClick={handleAreaClick}
       {...fileDrop.areaDrop}
     >
-      <input type="file" ref={inputRef} {...fileDrop.inputDrop} />
-      <span>Drop image here</span>
+      <div className={styles.fileDropWrapperBorder}>
+        <input type="file" ref={inputRef} {...fileDrop.inputDrop} />
+        <BiUpload className={styles.uploadIcon} />
+        <p>Drag and drop your image here</p>
+      </div>
     </div>
   );
 };
