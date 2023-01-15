@@ -23,7 +23,6 @@ const TextInput = ({ field, label, type = "input" }) => {
         {field.error && <p>{field.error}</p>}
       </div>
       {inputMarkup}
-      <input {...field.attributes} />
     </div>
   );
 };
