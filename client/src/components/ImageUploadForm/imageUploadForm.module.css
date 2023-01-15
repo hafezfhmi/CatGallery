@@ -12,7 +12,6 @@
 
 .fileDropWrapper {
   width: 40%;
-  flex-basis: 26rem;
   border-radius: 1.2rem;
 }
 
@@ -27,6 +26,7 @@
   }
 
   .fileDropWrapper {
+    flex-basis: 26rem;
     width: 100%;
   }
 }

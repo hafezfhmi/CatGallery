@@ -78,11 +78,17 @@ export const useFileDrop = () => {
     reader.readAsDataURL(file);
   };
 
+  const clearImage = () => {
+    setImage(null);
+    setImageUrl(null);
+  };
+
   return {
     areaDrop: { onDrop: handleOnDrop, onDragOver: handleDragOver },
     inputDrop: {
       onChange: handleInputChange,
     },
+    clearImage,
     value: {
       image,
       imageUrl,
