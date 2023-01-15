@@ -44,6 +44,7 @@ export const useError = () => {
 
 export const useFileDrop = () => {
   const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
   const handleDragOver = (e) => {
     e.stopPropagation();
@@ -55,20 +56,24 @@ export const useFileDrop = () => {
     e.preventDefault();
 
     const file = e.dataTransfer.files[0];
+    setImage(file);
 
+    // get image url that can be used to display on img tag
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImage(reader.result);
+      setImageUrl(reader.result);
     };
     reader.readAsDataURL(file);
   };
 
   const handleInputChange = (e) => {
     const file = e.target.files[0];
+    setImage(file);
 
+    // get image url that can be used to display on img tag
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImage(reader.result);
+      setImageUrl(reader.result);
     };
     reader.readAsDataURL(file);
   };
@@ -78,6 +83,9 @@ export const useFileDrop = () => {
     inputDrop: {
       onChange: handleInputChange,
     },
-    value: image,
+    value: {
+      image,
+      imageUrl,
+    },
   };
 };
