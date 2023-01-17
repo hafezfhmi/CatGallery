@@ -11,13 +11,19 @@ export function UseUserContext() {
 export const UserContextProvider = (props) => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLogging, setIsLogging] = useState(true);
 
   useEffect(() => {
     const fetchUserLoginStatus = async () => {
-      const userLoginStatus = await authServices.relog();
+      try {
+        const userLoginStatus = await authServices.relog();
 
-      setUser(userLoginStatus.user);
-      setIsLoggedIn(userLoginStatus.isLoggedIn);
+        setUser(userLoginStatus.user);
+        setIsLoggedIn(userLoginStatus.isLoggedIn);
+        setIsLogging(false);
+      } catch (error) {
+        setIsLogging(false);
+      }
     };
 
     fetchUserLoginStatus();
@@ -40,7 +46,9 @@ export const UserContextProvider = (props) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, isLoggedIn, login, logout }}>
+    <UserContext.Provider
+      value={{ user, setUser, isLoggedIn, isLogging, login, logout }}
+    >
       {props.children}
     </UserContext.Provider>
   );

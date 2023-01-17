@@ -1,39 +1,44 @@
-import { useState, useEffect } from "react";
-import catsServices from "./services/cats";
-import CatList from "./components/CatList";
-import CatForm from "./components/CatForm";
-import SignupForm from "./components/SignupForm";
-import LoginForm from "./components/LoginForm";
-import LogoutForm from "./components/LogoutForm";
-import { UseUserContext } from "./context/userContext";
+import React from "react";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+  Route,
+} from "react-router-dom";
 
-function App() {
-  const userCtx = UseUserContext();
+import Root from "./routes/Root";
+import Login from "./routes/Login";
+import Signup from "./routes/Signup";
+import Home from "./routes/Home";
+import Gallery from "./routes/Gallery";
+import Upload from "./routes/Upload";
+import PasswordReset from "./routes/PasswordReset";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
-  const [cats, setCats] = useState([]);
-
-  useEffect(() => {
-    catsServices.getAll().then((data) => setCats(data));
-  }, []);
-
-  return (
-    <div>
-      {userCtx.isLoggedIn ? (
-        <div>
-          <p>{userCtx.user.username} logged in</p>
-          <LogoutForm />
-        </div>
-      ) : (
-        <div>
-          <LoginForm />
-          <SignupForm />
-        </div>
-      )}
-
-      <CatForm setCats={setCats} />
-      <CatList cats={cats} />
-    </div>
+const App = () => {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="/" element={<Root />}>
+          <Route index element={<Home />} />
+          <Route path="passwordReset/:tokenId" element={<PasswordReset />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
+          <Route path="gallery" element={<Gallery />} />
+          <Route
+            path="upload"
+            element={
+              <ProtectedRoute>
+                <Upload />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+      </>
+    )
   );
-}
+
+  return <RouterProvider router={router} />;
+};
 
 export default App;
