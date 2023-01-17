@@ -22,8 +22,22 @@ const App = () => {
         <Route path="/" element={<Root />}>
           <Route index element={<Home />} />
           <Route path="passwordReset/:tokenId" element={<PasswordReset />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
+          <Route
+            path="login"
+            element={
+              <ProtectedRoute isLogged={false}>
+                <Login />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="signup"
+            element={
+              <ProtectedRoute isLogged={false}>
+                <Signup />
+              </ProtectedRoute>
+            }
+          />
           <Route path="gallery" element={<Gallery />} />
           <Route
             path="upload"
