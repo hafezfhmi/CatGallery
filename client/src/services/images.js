@@ -2,6 +2,10 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:3001/image";
 
+const getAll = () => {
+  return axios.get(baseUrl).then((response) => response.data);
+};
+
 const create = (title, description, file) => {
   return axios
     .post(
@@ -21,8 +25,6 @@ const create = (title, description, file) => {
     .then((response) => response.data);
 };
 
-const imageService = {
-  create,
-};
+const imageService = { getAll, create };
 
 export default imageService;

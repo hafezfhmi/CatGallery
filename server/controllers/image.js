@@ -2,6 +2,16 @@ const fs = require("fs");
 const cloudinary = require("../utils/cloudinaryUpload");
 const Image = require("../models/image");
 
+exports.getAllImages = async (req, res, next) => {
+  try {
+    const images = await Image.findAll();
+
+    return res.status(200).json(images);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 exports.postImage = async (req, res, next) => {
   try {
     const { title, description } = req.body;
