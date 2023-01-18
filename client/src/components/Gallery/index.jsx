@@ -1,174 +1,14 @@
 import React, { useState, useEffect } from "react";
-import imageService from "../../services/images";
+import imageServices from "../../services/images";
 import styles from "./gallery.module.css";
 
-// let imageList = [
-//   {
-//     id: 1,
-//     title: "Image 1",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 2",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIe2CBQBICvUwtDYghuUTY2LRsrrHZquSrcEk05MCIRzG-YMuXVuO-JB5cEc70QJWXYyI&usqp=CAU",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 3",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 4",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 5",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://upload.wikimedia.org/wikipedia/commons/1/15/Cat_August_2010-4.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 6",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://images.pexels.com/photos/10188725/pexels-photo-10188725.jpeg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 7",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNQ2biucYNrBfYWY_EVTQiWbRtbNA0sWegUCwrsuZJBOmYy1ijw3nRoJcweMWmFEGt-A0&usqp=CAU",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 8",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 9",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://upload.wikimedia.org/wikipedia/commons/1/15/Cat_August_2010-4.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 10",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 1",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 2",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIe2CBQBICvUwtDYghuUTY2LRsrrHZquSrcEk05MCIRzG-YMuXVuO-JB5cEc70QJWXYyI&usqp=CAU",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 3",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 4",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 5",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://upload.wikimedia.org/wikipedia/commons/1/15/Cat_August_2010-4.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 6",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://images.pexels.com/photos/10188725/pexels-photo-10188725.jpeg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 7",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNQ2biucYNrBfYWY_EVTQiWbRtbNA0sWegUCwrsuZJBOmYy1ijw3nRoJcweMWmFEGt-A0&usqp=CAU",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 8",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 9",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://upload.wikimedia.org/wikipedia/commons/1/15/Cat_August_2010-4.jpg",
-//     user_id: 123,
-//   },
-//   {
-//     id: 1,
-//     title: "Image 10",
-//     description: "A beautiful landscape",
-//     imageUrl:
-//       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492__340.jpg",
-//     user_id: 123,
-//   },
-// ];
-
 const Gallery = () => {
-  const [imageList, setImageList] = useState([]);
+  const [imageList, setImageList] = useState([{ id: "bottomReference" }]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+
   const [columnSize, setColumnSize] = useState(4);
-  const [firstColumn, setFirstColumn] = useState([]);
+  const [firstColumn, setFirstColumn] = useState([{ id: "bottomReference" }]);
   const [secondColumn, setSecondColumn] = useState([]);
   const [thirdColumn, setThirdColumn] = useState([]);
   const [fourthColumn, setFourthColumn] = useState([]);
@@ -183,6 +23,7 @@ const Gallery = () => {
     }
   };
 
+  // Add resize event to update amount of column
   useEffect(() => {
     columnSizeUpdater();
 
@@ -193,6 +34,7 @@ const Gallery = () => {
     };
   }, []);
 
+  // Spread the image to its column
   useEffect(() => {
     let firstColumnPlaceholder = [];
     let secondColumnPlaceholder = [];
@@ -281,42 +123,74 @@ const Gallery = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let images = await imageService.getAll();
-      setImageList(images);
+      try {
+        setIsLoading(true);
+        let images = await imageServices.getAll(page);
+
+        // No more data, removed bottom reference to avoid being rendered
+        if (images.length === 0) {
+          setImageList((prev) => prev.slice(0, prev.length - 1));
+        } else {
+          // Remove the previous bottomReference, add new images and add new bottomReference
+          setImageList((prev) => [
+            ...prev.slice(0, prev.length - 1),
+            ...images,
+            { id: "bottomReference" },
+          ]);
+        }
+
+        setIsLoading(false);
+      } catch (error) {
+        // TODO: DO SOME ERROR INDICATION IF FAIL TO FETCH DATA
+        console.error(error);
+        setIsLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [page]);
+
+  useEffect(() => {
+    const handleIntersection = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !isLoading) {
+          setPage((prev) => prev + 1);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersection);
+    const bottomRef = document.getElementById("bottomReference");
+    observer.observe(bottomRef);
+
+    return () => observer.disconnect();
+  }, [isLoading]);
+
+  const markupMapper = (curr) => {
+    if (curr.id === "bottomReference") {
+      return <div className={styles.imageContainer} id="bottomReference"></div>;
+    }
+
+    return (
+      <div className={styles.imageContainer}>
+        <img src={curr.imageUrl} alt="" />
+      </div>
+    );
+  };
 
   return (
     <div className={styles.gallery}>
       <div className={styles.galleryColumn + " " + styles.firstColumn}>
-        {firstColumn.map((curr) => (
-          <div className={styles.imageContainer}>
-            <img src={curr.imageUrl} alt="" />
-          </div>
-        ))}
+        {firstColumn.map(markupMapper)}
       </div>
       <div className={styles.galleryColumn + " " + styles.secondColumn}>
-        {secondColumn.map((curr) => (
-          <div className={styles.imageContainer}>
-            <img src={curr.imageUrl} alt="" />
-          </div>
-        ))}
+        {secondColumn.map(markupMapper)}
       </div>
       <div className={styles.galleryColumn + " " + styles.thirdColumn}>
-        {thirdColumn.map((curr) => (
-          <div className={styles.imageContainer}>
-            <img src={curr.imageUrl} alt="" />
-          </div>
-        ))}
+        {thirdColumn.map(markupMapper)}
       </div>
       <div className={styles.galleryColumn + " " + styles.fourthColumn}>
-        {fourthColumn.map((curr) => (
-          <div className={styles.imageContainer}>
-            <img src={curr.imageUrl} alt="" />
-          </div>
-        ))}
+        {fourthColumn.map(markupMapper)}
       </div>
     </div>
   );

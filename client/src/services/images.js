@@ -2,8 +2,8 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:3001/image";
 
-const getAll = () => {
-  return axios.get(baseUrl).then((response) => response.data);
+const getAll = (page = 1) => {
+  return axios.get(`${baseUrl}?page=${page}`).then((response) => response.data);
 };
 
 const create = (title, description, file) => {
@@ -25,6 +25,6 @@ const create = (title, description, file) => {
     .then((response) => response.data);
 };
 
-const imageService = { getAll, create };
+const imageServices = { getAll, create };
 
-export default imageService;
+export default imageServices;
