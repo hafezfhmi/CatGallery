@@ -12,6 +12,25 @@ exports.getAllImages = async (req, res, next) => {
   }
 };
 
+exports.getImagesByPage = async (req, res, next) => {
+  let page = req.query.page || 1;
+  page = Number.parseInt(page, 10);
+
+  if (Number.isNaN(page) || page < 1) {
+    return res.status(422).json({ msg: "Page is not a valid number" });
+  }
+
+  const toSkip = 10 * (page - 1);
+
+  try {
+    const images = await Image.findAll({ offset: toSkip, limit: 10 });
+
+    return res.status(200).json(images);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 exports.postImage = async (req, res, next) => {
   try {
     const { title, description } = req.body;
