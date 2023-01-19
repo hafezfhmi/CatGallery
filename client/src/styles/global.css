@@ -19,10 +19,6 @@ body {
   margin: 0 auto;
 }
 
-#bottomReference {
-  height: 4rem;
-}
-
 @media only screen and (min-width: 1800px) {
   html {
     font-size: 118.75%; /* 19px */

@@ -22,6 +22,11 @@
   transition: transform 0.5s;
 }
 
+.bottomReference {
+  height: 4rem;
+  background-color: red;
+}
+
 @media (hover: hover) {
   .imageContainer img:hover {
     transform: scale(1.1);

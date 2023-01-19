@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import imageServices from "../../services/images";
 import styles from "./gallery.module.css";
+import { useRef } from "react";
 
 const Gallery = () => {
   const [imageList, setImageList] = useState([{ id: "bottomReference" }]);
@@ -8,23 +9,22 @@ const Gallery = () => {
   const [page, setPage] = useState(1);
 
   const [columnSize, setColumnSize] = useState(4);
-  const [firstColumn, setFirstColumn] = useState([{ id: "bottomReference" }]);
-  const [secondColumn, setSecondColumn] = useState([]);
-  const [thirdColumn, setThirdColumn] = useState([]);
-  const [fourthColumn, setFourthColumn] = useState([]);
+  const [column, setColumn] = useState([[], [], [], []]);
 
-  const columnSizeUpdater = () => {
-    if (window.innerWidth <= 425) {
-      setColumnSize(2);
-    } else if (window.innerWidth <= 768) {
-      setColumnSize(3);
-    } else {
-      setColumnSize(4);
-    }
-  };
+  const bottomRef = useRef(null);
 
   // Add resize event to update amount of column
   useEffect(() => {
+    const columnSizeUpdater = () => {
+      if (window.innerWidth <= 425) {
+        setColumnSize(2);
+      } else if (window.innerWidth <= 768) {
+        setColumnSize(3);
+      } else {
+        setColumnSize(4);
+      }
+    };
+
     columnSizeUpdater();
 
     window.addEventListener("resize", columnSizeUpdater);
@@ -112,15 +112,18 @@ const Gallery = () => {
         }
       }
 
-      setFirstColumn(firstColumnPlaceholder);
-      setSecondColumn(secondColumnPlaceholder);
-      setThirdColumn(thirdColumnPlaceholder);
-      setFourthColumn(fourthColumnPlaceholder);
+      setColumn([
+        firstColumnPlaceholder,
+        secondColumnPlaceholder,
+        thirdColumnPlaceholder,
+        fourthColumnPlaceholder,
+      ]);
     };
 
     distributeImage();
   }, [columnSize, imageList]);
 
+  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -152,23 +155,27 @@ const Gallery = () => {
 
   useEffect(() => {
     const handleIntersection = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !isLoading) {
-          setPage((prev) => prev + 1);
-        }
-      });
+      let myEntry = entries[0];
+
+      if (myEntry.isIntersecting && !isLoading) {
+        setPage((prev) => prev + 1);
+      }
     };
 
     const observer = new IntersectionObserver(handleIntersection);
-    const bottomRef = document.getElementById("bottomReference");
-    observer.observe(bottomRef);
+    if (bottomRef.current) observer.observe(bottomRef.current);
 
     return () => observer.disconnect();
   }, [isLoading]);
 
   const markupMapper = (curr) => {
     if (curr.id === "bottomReference") {
-      return <div className={styles.imageContainer} id="bottomReference"></div>;
+      return (
+        <div
+          className={styles.imageContainer + " " + styles.bottomReference}
+          ref={bottomRef}
+        ></div>
+      );
     }
 
     return (
@@ -180,17 +187,13 @@ const Gallery = () => {
 
   return (
     <div className={styles.gallery}>
-      <div className={styles.galleryColumn + " " + styles.firstColumn}>
-        {firstColumn.map(markupMapper)}
-      </div>
-      <div className={styles.galleryColumn + " " + styles.secondColumn}>
-        {secondColumn.map(markupMapper)}
-      </div>
+      <div className={styles.galleryColumn}>{column[0].map(markupMapper)}</div>
+      <div className={styles.galleryColumn}>{column[1].map(markupMapper)}</div>
       <div className={styles.galleryColumn + " " + styles.thirdColumn}>
-        {thirdColumn.map(markupMapper)}
+        {column[2].map(markupMapper)}
       </div>
       <div className={styles.galleryColumn + " " + styles.fourthColumn}>
-        {fourthColumn.map(markupMapper)}
+        {column[3].map(markupMapper)}
       </div>
     </div>
   );
