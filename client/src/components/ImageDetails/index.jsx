@@ -101,13 +101,21 @@ const ImageDetails = ({ image }) => {
         <Button label="Add comment" style={{ marginTop: "1.2rem" }} />
       </form>
 
-      <div>
+      <div className={styles.commentListContainer}>
         <ul>
           {comments.map((comment) => (
-            <li key={comment.id}>
-              {comment.detail}
+            <li key={comment.id} className={styles.commentList}>
+              <img src={user?.userProfile || person} alt="" />
+              <div className={styles.commentListDetails}>
+                <p>{comment.user.username}</p>
+                <p>{comment.detail}</p>
 
-              <p>{comment.user.id}</p>
+                <div className={styles.commentAction}>
+                  <p>Reply</p>
+                  <p>Edit</p>
+                  <p>Like</p>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
