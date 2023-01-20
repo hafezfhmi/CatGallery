@@ -7,6 +7,7 @@ const { createClient } = require("redis");
 const authRouter = require("./routes/auth");
 const imageRouter = require("./routes/image");
 const userRouter = require("./routes/user");
+const commentRouter = require("./routes/comment");
 
 const Image = require("./models/image");
 const User = require("./models/user");
@@ -35,6 +36,7 @@ app.use(
 app.use("/auth", authRouter);
 app.use("/image", imageRouter);
 app.use("/user", userRouter);
+app.use("/comment", commentRouter);
 
 // Associations/relationships
 // user 1:M image
@@ -48,9 +50,12 @@ PasswordReset.belongsTo(User, { foreignKey: "userId" });
 // user 1:M likeImage M:1 image
 User.belongsToMany(Image, { through: LikeImage, foreignKey: "userId" });
 Image.belongsToMany(User, { through: LikeImage, foreignKey: "imageId" });
-// user 1:M comment M:1 comment
-User.belongsToMany(Image, { through: Comment, foreignKey: "userId" });
-Image.belongsToMany(User, { through: Comment, foreignKey: "imageId" });
+// user 1:M comment
+User.hasMany(Comment, { foreignKey: "userId" });
+Comment.belongsTo(User, { foreignKey: "userId" });
+// image 1:M comment
+Image.hasMany(Comment, { foreignKey: "imageId" });
+Comment.belongsTo(Image, { foreignKey: "imageId" });
 // comment 1:M comment
 Comment.hasMany(Comment, { foreignKey: "parentCommentId" });
 Comment.belongsTo(Comment, { foreignKey: "parentCommentId" });
