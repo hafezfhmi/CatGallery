@@ -127,7 +127,11 @@ exports.getLikesAmount = async (req, res, next) => {
 
 exports.getUserLiked = async (req, res, next) => {
   const { id: imageId } = req.params;
-  const userId = req.session.user.id;
+  const userId = req.session?.user?.id;
+
+  if (!userId) {
+    return res.status(200).json({ liked: false });
+  }
 
   try {
     const likesAmount = await LikeImage.count({ where: { imageId, userId } });
