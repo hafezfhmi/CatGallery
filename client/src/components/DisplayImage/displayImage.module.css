@@ -1,0 +1,9 @@
+.displayImage {
+  width: 40%;
+  border-radius: 1.2rem;
+}
+
+.image {
+  width: 100%;
+  border-radius: 2rem;
+}

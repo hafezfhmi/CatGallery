@@ -33,7 +33,8 @@ const Navbar = () => {
         <Link to={"/"} className={styles.logoWrapper}>
           <img src={catLogo} alt="cat logo" />
           <div>
-            <span>Meow</span> Gallery
+            {/* <span>Meow</span> Gallery */}
+            <span>Test</span> Test
           </div>
         </Link>
 

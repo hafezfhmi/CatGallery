@@ -14,6 +14,7 @@ import Gallery from "./routes/Gallery";
 import Upload from "./routes/Upload";
 import PasswordReset from "./routes/PasswordReset";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Image from "./routes/Image";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -39,6 +40,7 @@ const App = () => {
             }
           />
           <Route path="gallery" element={<Gallery />} />
+          <Route path="/image/:id" element={<Image />} />
           <Route
             path="upload"
             element={

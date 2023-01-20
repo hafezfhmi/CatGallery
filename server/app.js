@@ -6,6 +6,7 @@ const { createClient } = require("redis");
 
 const authRouter = require("./routes/auth");
 const imageRouter = require("./routes/image");
+const userRouter = require("./routes/user");
 
 const Image = require("./models/image");
 const User = require("./models/user");
@@ -33,6 +34,7 @@ app.use(
 // Routes
 app.use("/auth", authRouter);
 app.use("/image", imageRouter);
+app.use("/user", userRouter);
 
 // Associations/relationships
 // user 1:M image

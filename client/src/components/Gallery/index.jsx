@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import imageServices from "../../services/images";
 import styles from "./gallery.module.css";
 import { useRef } from "react";
@@ -153,6 +154,7 @@ const Gallery = () => {
     fetchData();
   }, [page]);
 
+  // Setup intersection observer
   useEffect(() => {
     const handleIntersection = (entries) => {
       let myEntry = entries[0];
@@ -180,7 +182,9 @@ const Gallery = () => {
 
     return (
       <div className={styles.imageContainer}>
-        <img src={curr.imageUrl} alt="" />
+        <Link to={`/image/${curr.id}`}>
+          <img src={curr.imageUrl} alt="" />
+        </Link>
       </div>
     );
   };
