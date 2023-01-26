@@ -21,14 +21,19 @@ exports.postComment = async (req, res, next) => {
 
     const userId = req.session.user.id;
 
-    const createdImage = await Comment.create({
+    const createdComment = await Comment.create({
       detail,
       userId,
       imageId,
       parentCommentId,
     });
 
-    return res.status(201).json(createdImage);
+    const newComment = await Comment.findOne({
+      where: { id: createdComment.id },
+      include: { all: true },
+    });
+
+    return res.status(201).json(newComment);
   } catch (error) {
     return next(error);
   }

@@ -81,7 +81,7 @@ const ImageDetails = ({ image }) => {
     }
   };
 
-  const handleRootCommmentSubmit = (e) => {
+  const handleRootCommmentSubmit = async (e) => {
     e.preventDefault();
 
     const loginShowed = handleOnClickLogin();
@@ -91,7 +91,13 @@ const ImageDetails = ({ image }) => {
     }
 
     // TODO: Add functionality to refer to parent comment id, maybe move the comment to its own component. But this one is the root reply comment so parentId can be null
-    commentService.create(comment.attributes.value, image.id, null);
+    let newComment = await commentService.create(
+      comment.attributes.value,
+      image.id,
+      null
+    );
+    setComments((prev) => [...prev, newComment]);
+    comment.reset();
   };
 
   // TODO: USEEFFECT FETCH COMMENT
