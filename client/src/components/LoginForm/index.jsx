@@ -8,7 +8,7 @@ import styles from "./loginForm.module.css";
 import { useField, useError } from "../../hooks/index";
 import { UseUserContext } from "../../context/userContext";
 
-const LoginForm = () => {
+const LoginForm = ({ redirect = true, disableError = null }) => {
   const navigate = useNavigate();
   const email = useField("text", "email");
   const password = useField("password", "password");
@@ -49,7 +49,13 @@ const LoginForm = () => {
 
     try {
       await login(email.attributes.value, password.attributes.value);
-      navigate("/");
+      if (redirect) {
+        navigate("/");
+      }
+
+      if (disableError) {
+        disableError();
+      }
     } catch (err) {
       error.handleError(true, err?.response?.data?.msg || err.message);
     }

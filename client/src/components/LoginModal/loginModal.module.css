@@ -7,32 +7,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
   background-color: rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(2px);
 }
 
 .card {
   position: relative;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 1.2rem;
-  text-align: center;
-  max-width: 30%;
-}
-
-.card > img {
-  width: 60%;
-}
-
-.card > h1 {
-  font-size: 2rem;
-  font-weight: 600;
-}
-
-.card > p {
-  margin-top: 1.2rem;
-  font-size: 1.2rem;
 }
 
 .close {
