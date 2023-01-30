@@ -33,36 +33,36 @@ exports.getCommentsByPage = async (req, res, next) => {
   imageId = Number.parseInt(imageId, 10);
   previousLength = Number.parseInt(previousLength, 10);
 
-  if (Number.isNaN(imageId)) {
-    throw new Error("Invalid imageId");
-  }
-
-  if (Number.isNaN(page) || page < 1) {
-    throw new Error("Invalid page number");
-  }
-
-  if (Number.isNaN(parentCommentId) && parentCommentId !== null) {
-    throw new Error("Invalid parentCommentId");
-  }
-
-  if (Number.isNaN(previousLength)) {
-    throw new Error("Invalid previousLength");
-  }
-
-  let extraCommentAmount;
-  let toSkip;
-
-  if (page === 1) {
-    toSkip = 0;
-    extraCommentAmount = 0;
-  } else {
-    const commentModulus = previousLength % 5;
-    toSkip = commentPageLimit * (page - 1) - commentModulus;
-    extraCommentAmount =
-      commentModulus > 0 ? commentPageLimit - commentModulus : 0;
-  }
-
   try {
+    if (Number.isNaN(imageId)) {
+      throw new Error("Invalid imageId");
+    }
+
+    if (Number.isNaN(page) || page < 1) {
+      throw new Error("Invalid page number");
+    }
+
+    if (Number.isNaN(parentCommentId) && parentCommentId !== null) {
+      throw new Error("Invalid parentCommentId");
+    }
+
+    if (Number.isNaN(previousLength)) {
+      throw new Error("Invalid previousLength");
+    }
+
+    let extraCommentAmount;
+    let toSkip;
+
+    if (page === 1) {
+      toSkip = 0;
+      extraCommentAmount = 0;
+    } else {
+      const commentModulus = previousLength % 5;
+      toSkip = commentPageLimit * (page - 1) - commentModulus;
+      extraCommentAmount =
+        commentModulus > 0 ? commentPageLimit - commentModulus : 0;
+    }
+
     const commentList = await Comment.findAll({
       where: {
         imageId,
@@ -107,14 +107,14 @@ exports.getCommentsByPage = async (req, res, next) => {
 };
 
 exports.postComment = async (req, res, next) => {
+  const { detail } = req.body;
+  let { parentCommentId, imageId } = req.body;
+
+  parentCommentId =
+    parentCommentId === null ? null : Number.parseInt(parentCommentId, 10);
+  imageId = Number.parseInt(imageId, 10);
+
   try {
-    const { detail } = req.body;
-    let { parentCommentId, imageId } = req.body;
-
-    parentCommentId =
-      parentCommentId === null ? null : Number.parseInt(parentCommentId, 10);
-    imageId = Number.parseInt(imageId, 10);
-
     if (!detail) {
       throw new Error("Invalid comment");
     }
