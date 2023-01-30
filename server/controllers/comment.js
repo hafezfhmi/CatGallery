@@ -60,7 +60,8 @@ exports.getCommentsByPage = async (req, res, next) => {
       extraCommentAmount = 0;
     } else {
       const commentModulus = previousLength % 5;
-      const commentMissing = commentPageLimit - commentModulus;
+      const commentMissing =
+        commentModulus > 0 ? commentPageLimit - commentModulus : 0;
       toSkip = commentPageLimit * (page - 1) - commentMissing;
       extraCommentAmount = commentModulus > 0 ? commentMissing : 0;
     }
