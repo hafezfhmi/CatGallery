@@ -7,7 +7,8 @@ const { createClient } = require("redis");
 const authRouter = require("./routes/auth");
 const imageRouter = require("./routes/image");
 const userRouter = require("./routes/user");
-const commentRouter = require("./routes/comment");
+
+const errorHandler = require("./utils/errorHandler");
 
 const Image = require("./models/image");
 const User = require("./models/user");
@@ -20,7 +21,7 @@ const app = express();
 const redisClient = createClient({ legacyMode: true });
 redisClient.connect().catch(console.error);
 
-// Middleware
+// Middlewares
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(
@@ -36,7 +37,9 @@ app.use(
 app.use("/auth", authRouter);
 app.use("/image", imageRouter);
 app.use("/user", userRouter);
-app.use("/comment", commentRouter);
+
+// Middlewares
+app.use(errorHandler);
 
 // Associations/relationships
 // user 1:M image
