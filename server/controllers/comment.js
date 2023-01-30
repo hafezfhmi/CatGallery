@@ -25,7 +25,9 @@ const checkCommentNesting = async (parentCommentId) => {
 
 exports.getCommentsByPage = async (req, res, next) => {
   let { id: imageId } = req.params;
-  let { parentCommentId, page, previousLength = 0 } = req.query;
+  let parentCommentId = req.query.parentCommentId || null;
+  let page = req.query.page || 1;
+  let previousLength = req.query.previousLength || 0;
 
   parentCommentId =
     parentCommentId === "null" ? null : Number.parseInt(parentCommentId, 10);
@@ -58,9 +60,9 @@ exports.getCommentsByPage = async (req, res, next) => {
       extraCommentAmount = 0;
     } else {
       const commentModulus = previousLength % 5;
-      toSkip = commentPageLimit * (page - 1) - commentModulus;
-      extraCommentAmount =
-        commentModulus > 0 ? commentPageLimit - commentModulus : 0;
+      const commentMissing = commentPageLimit - commentModulus;
+      toSkip = commentPageLimit * (page - 1) - commentMissing;
+      extraCommentAmount = commentModulus > 0 ? commentMissing : 0;
     }
 
     const commentList = await Comment.findAll({
