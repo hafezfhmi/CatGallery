@@ -18,6 +18,35 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+exports.getRelog = (req, res) =>
+  res.json({
+    user: req.session.user,
+    isLoggedIn: req.session.isLoggedIn,
+  });
+
+exports.getOneResetPassword = async (req, res, next) => {
+  const { resetToken } = req.params;
+
+  try {
+    const resetTokenDetails = await PasswordReset.findOne({
+      where: {
+        resetToken,
+        expiry: {
+          [Op.gt]: new Date(),
+        },
+      },
+    });
+
+    if (!resetTokenDetails) {
+      throw new Error("Invalid token");
+    }
+
+    return res.status(200).json({ message: "Valid token" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 exports.postLogin = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -111,12 +140,6 @@ exports.postSignup = async (req, res, next) => {
   }
 };
 
-exports.getRelog = (req, res) =>
-  res.json({
-    user: req.session.user,
-    isLoggedIn: req.session.isLoggedIn,
-  });
-
 exports.postResetPassword = async (req, res, next) => {
   const { email } = req.body;
 
@@ -172,29 +195,6 @@ exports.postResetPassword = async (req, res, next) => {
     return res
       .status(200)
       .json({ message: "Reset link has been sent to your email" });
-  } catch (error) {
-    return next(error);
-  }
-};
-
-exports.getOneResetPassword = async (req, res, next) => {
-  const { resetToken } = req.params;
-
-  try {
-    const resetTokenDetails = await PasswordReset.findOne({
-      where: {
-        resetToken,
-        expiry: {
-          [Op.gt]: new Date(),
-        },
-      },
-    });
-
-    if (!resetTokenDetails) {
-      throw new Error("Invalid token");
-    }
-
-    return res.status(200).json({ message: "Valid token" });
   } catch (error) {
     return next(error);
   }
