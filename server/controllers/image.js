@@ -6,7 +6,9 @@ const LikeImage = require("../models/likeImage");
 const User = require("../models/user");
 
 exports.getOneImage = async (req, res, next) => {
-  const { id } = req.params;
+  let { id } = req.params;
+
+  id = Number.parseInt(id, 10);
 
   try {
     if (Number.isNaN(id)) {
