@@ -28,7 +28,7 @@ exports.postLogin = async (req, res, next) => {
       dbUser == null ? false : await bcrypt.compare(password, dbUser.password);
 
     if (!passwordCorrect) {
-      return res.status(400).json({ msg: "Invalid username or password" });
+      throw new Error("Invalid username or password");
     }
 
     req.session.isLoggedIn = true;
@@ -48,7 +48,7 @@ exports.postLogin = async (req, res, next) => {
         email: dbUser.email,
       },
       isLoggedIn: true,
-      msg: "User login successfully",
+      message: "User login successfully",
     });
   } catch (error) {
     return next(error);
@@ -58,7 +58,7 @@ exports.postLogin = async (req, res, next) => {
 exports.postLogout = async (req, res, next) => {
   try {
     req.session.destroy(() => {
-      res.status(200).json({ msg: "User logged out successfully" });
+      res.status(200).json({ message: "User logged out" });
     });
   } catch (error) {
     next(error);
@@ -69,33 +69,29 @@ exports.postSignup = async (req, res, next) => {
   const { username, firstName, lastName, email, password, confirmPassword } =
     req.body;
 
-  // Check password
-  if (password !== confirmPassword) {
-    return res.status(400).json({ msg: "Password doesn't match" });
-  }
-
   try {
+    // Check password
+    if (password !== confirmPassword) {
+      throw new Error("Password doesn't match");
+    }
+
     // Check if user is already in db via email
     let foundUser = await User.findOne({ where: { email } });
     if (foundUser) {
-      return res
-        .status(400)
-        .json({ msg: "There's already a user with that email" });
+      throw new Error("There's already a user with that email");
     }
 
     // Check if user is already in db via username
     foundUser = await User.findOne({ where: { username } });
     if (foundUser) {
-      return res
-        .status(400)
-        .json({ msg: "There's already a user with that username" });
+      throw new Error("There's already a user with that username");
     }
 
     // Check if username is valid
     if (!/^[a-zA-Z0-9]+$/.test(username)) {
-      return res.status(400).json({
-        msg: "Invalid username. Username must contains only alphabetical characters and numbers",
-      });
+      throw new Error(
+        "Invalid username. Username must contains only alphabetical characters and numbers"
+      );
     }
 
     // encrypt password
@@ -109,7 +105,7 @@ exports.postSignup = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    return res.status(201).json({ msg: "User created successfully" });
+    return res.status(201).json({ message: "User created" });
   } catch (error) {
     return next(error);
   }
@@ -128,7 +124,7 @@ exports.postResetPassword = async (req, res, next) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(404).json({ msg: "User not found" });
+      throw new Error("User not found");
     }
 
     const hashBuffer = crypto.randomBytes(32);
@@ -145,10 +141,11 @@ exports.postResetPassword = async (req, res, next) => {
       );
 
       if (resetTokenExpiryLeft > 0) {
-        return res.status(400).json({
-          msg: `You had requested a password reset earlier. Please try again in ${resetTokenExpiryLeft} minutes.`,
-        });
+        throw new Error(
+          `You had requested a password reset earlier. Please try again in ${resetTokenExpiryLeft} minutes.`
+        );
       }
+
       // Update token and return response
       await PasswordReset.update(
         {
@@ -169,12 +166,12 @@ exports.postResetPassword = async (req, res, next) => {
       from: process.env.GMAIL_EMAIL,
       to: email,
       subject: "Password reset",
-      text: `Here's your link to reset your password: http://localhost:3000/passwordReset/${token}`,
+      text: `Here's the link to reset your password: http://localhost:3000/passwordReset/${token}`,
     });
 
     return res
       .status(200)
-      .json({ msg: "Reset link has been sent to your email" });
+      .json({ message: "Reset link has been sent to your email" });
   } catch (error) {
     return next(error);
   }
@@ -194,10 +191,10 @@ exports.getOneResetPassword = async (req, res, next) => {
     });
 
     if (!resetTokenDetails) {
-      return res.status(400).json({ msg: "Invalid token" });
+      throw new Error("Invalid token");
     }
 
-    return res.status(200).json({ msg: "Valid token" });
+    return res.status(200).json({ message: "Valid token" });
   } catch (error) {
     return next(error);
   }
@@ -218,17 +215,16 @@ exports.postNewPassword = async (req, res, next) => {
     });
 
     if (!resetTokenDetails) {
-      return res.status(400).json({ msg: "Invalid token" });
+      throw new Error("Invalid token");
     }
 
     // Check password
     if (password !== confirmPassword) {
-      return res.status(400).json({ msg: "Password doesn't match" });
+      throw new Error("Password doesn't match");
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // TODO: Transaction update and delete below
     await User.update(
       {
         password: hashedPassword,
@@ -246,7 +242,7 @@ exports.postNewPassword = async (req, res, next) => {
       },
     });
 
-    return res.status(200).json({ msg: "Password updated successfully" });
+    return res.status(200).json({ message: "Password updated" });
   } catch (error) {
     return next(error);
   }
