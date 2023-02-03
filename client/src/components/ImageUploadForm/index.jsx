@@ -18,13 +18,13 @@ const ImageUploadForm = () => {
     e.preventDefault();
 
     try {
-      await imageService.create(
+      await imageService.createImage(
         title.attributes.value,
         description.attributes.value,
         fileDrop.value.image
       );
     } catch (err) {
-      error.handleError(true, err?.response?.data?.msg || err.message);
+      error.handleError(true, err?.response?.data?.message || err.message);
     }
   };
 

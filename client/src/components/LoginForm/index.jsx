@@ -57,7 +57,7 @@ const LoginForm = ({ redirect = true, disableError = null }) => {
         disableError();
       }
     } catch (err) {
-      error.handleError(true, err?.response?.data?.msg || err.message);
+      error.handleError(true, err?.response?.data?.message || err.message);
     }
   };
 

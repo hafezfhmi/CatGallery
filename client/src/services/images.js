@@ -10,7 +10,23 @@ const getOne = (id) => {
   return axios.get(`${baseUrl}/${id}`).then((response) => response.data);
 };
 
-const create = (title, description, file) => {
+const getUserLiked = (id) => {
+  return axios
+    .get(`${baseUrl}/${id}/userLiked`, {
+      withCredentials: true,
+    })
+    .then((response) => response.data);
+};
+
+const getComments = (imageId, parentCommentId, page, previousLength) => {
+  return axios
+    .get(
+      `${baseUrl}/${imageId}/comments?parentCommentId=${parentCommentId}&page=${page}&previousLength=${previousLength}`
+    )
+    .then((response) => response.data);
+};
+
+const createImage = (title, description, file) => {
   return axios
     .post(
       baseUrl,
@@ -29,17 +45,18 @@ const create = (title, description, file) => {
     .then((response) => response.data);
 };
 
-const getLikesAmount = (id) => {
+const createComment = (detail, imageId, parentCommentId) => {
   return axios
-    .get(`${baseUrl}/${id}/likesAmount`)
-    .then((response) => response.data);
-};
-
-const getUserLiked = (id) => {
-  return axios
-    .get(`${baseUrl}/${id}/userLiked`, {
-      withCredentials: true,
-    })
+    .post(
+      `${baseUrl}/${imageId}/comments`,
+      {
+        detail,
+        parentCommentId,
+      },
+      {
+        withCredentials: true,
+      }
+    )
     .then((response) => response.data);
 };
 
@@ -58,9 +75,10 @@ const likeOne = (id) => {
 const imageServices = {
   getAll,
   getOne,
-  create,
-  getLikesAmount,
   getUserLiked,
+  getComments,
+  createImage,
+  createComment,
   likeOne,
 };
 

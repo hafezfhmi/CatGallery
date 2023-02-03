@@ -1,30 +1,29 @@
-import axios from "axios";
+// import axios from "axios";
 
-const baseUrl = "http://localhost:3001/comment";
+// const baseUrl = "http://localhost:3001/comment";
 
-const getAll = (imageId) => {
-  return axios.get(`${baseUrl}/${imageId}`).then((response) => response.data);
-};
+// const getAll = (imageId, parentCommentId, page) => {
+//   return axios.get(`${baseUrl}/${imageId}`).then((response) => response.data);
+// };
 
-const create = (detail, imageId, parentCommentId) => {
-  return axios
-    .post(
-      baseUrl,
-      {
-        detail,
-        imageId,
-        parentCommentId,
-      },
-      {
-        withCredentials: true,
-      }
-    )
-    .then((response) => response.data);
-};
+// const create = (detail, imageId, parentCommentId) => {
+//   return axios
+//     .post(
+//       `${baseUrl}/${imageId}`,
+//       {
+//         detail,
+//         parentCommentId,
+//       },
+//       {
+//         withCredentials: true,
+//       }
+//     )
+//     .then((response) => response.data);
+// };
 
-const commentService = {
-  getAll,
-  create,
-};
+// const commentService = {
+//   getAll,
+//   create,
+// };
 
-export default commentService;
+// export default commentService;

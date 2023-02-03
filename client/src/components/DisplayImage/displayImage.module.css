@@ -1,9 +1,15 @@
 .displayImage {
   width: 40%;
-  border-radius: 1.2rem;
 }
 
-.image {
+.displayImage > img {
   width: 100%;
   border-radius: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  .displayImage {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
 }

@@ -55,7 +55,7 @@ exports.getCommentsByPage = async (req, res, next) => {
     let extraCommentAmount;
     let toSkip;
 
-    if (page === 1) {
+    if (page === 1 && !previousLength) {
       toSkip = 0;
       extraCommentAmount = 0;
     } else {
@@ -63,6 +63,9 @@ exports.getCommentsByPage = async (req, res, next) => {
       const commentMissing =
         commentModulus > 0 ? commentPageLimit - commentModulus : 0;
       toSkip = commentPageLimit * (page - 1) - commentMissing;
+      if (toSkip < 0) {
+        toSkip = commentModulus;
+      }
       extraCommentAmount = commentModulus > 0 ? commentMissing : 0;
     }
 
@@ -110,8 +113,9 @@ exports.getCommentsByPage = async (req, res, next) => {
 };
 
 exports.postComment = async (req, res, next) => {
+  let { id: imageId } = req.params;
   const { detail } = req.body;
-  let { parentCommentId, imageId } = req.body;
+  let { parentCommentId } = req.body;
 
   parentCommentId =
     parentCommentId === null ? null : Number.parseInt(parentCommentId, 10);

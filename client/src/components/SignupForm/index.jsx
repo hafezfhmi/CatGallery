@@ -95,7 +95,7 @@ const SignupForm = () => {
       );
       navigate("/signup-validation");
     } catch (err) {
-      error.handleError(true, err?.response?.data?.msg || err.message);
+      error.handleError(true, err?.response?.data?.message || err.message);
     }
   };
 

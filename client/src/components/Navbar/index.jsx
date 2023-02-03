@@ -34,7 +34,7 @@ const Navbar = () => {
           <img src={catLogo} alt="cat logo" />
           <div>
             {/* <span>Meow</span> Gallery */}
-            <span>Test</span> Test
+            <span>Meow</span>Gallery
           </div>
         </Link>
 

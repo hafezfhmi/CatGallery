@@ -11,15 +11,13 @@ const Image = () => {
 
   useEffect(() => {
     const fetchData = async (id) => {
-      const imageData = await imageServices.getOne(id);
+      const fetchedImage = await imageServices.getOne(id);
 
-      setImage(imageData);
+      setImage(fetchedImage);
     };
 
     fetchData(id);
   }, [id]);
-
-  console.log(image);
 
   return (
     <div className={styles.image}>
