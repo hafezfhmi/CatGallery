@@ -1,23 +1,21 @@
 const router = require("express").Router();
-const upload = require("../utils/fileUpload");
 
 const {
-  getOneImage,
+  getImage,
   getImagesByPage,
-  getUserLiked,
   postImage,
   postLikeImage,
 } = require("../controllers/image");
 const { getCommentsByPage, postComment } = require("../controllers/comment");
 const isAuth = require("../utils/isAuth");
+const upload = require("../utils/fileUpload");
 
 router.get("/", getImagesByPage);
-router.get("/:id", getOneImage);
-router.get("/:id/userLiked", isAuth, getUserLiked);
-router.get("/:id/comments", getCommentsByPage);
+router.get("/:imageId", getImage);
+router.get("/:imageId/comments", getCommentsByPage);
 
 router.post("/", isAuth, upload.single("file"), postImage);
-router.post("/likes", isAuth, postLikeImage);
-router.post("/:id/comments", isAuth, postComment);
+router.post("/:imageId/like", isAuth, postLikeImage);
+router.post("/:imageId/comment", isAuth, postComment);
 
 module.exports = router;

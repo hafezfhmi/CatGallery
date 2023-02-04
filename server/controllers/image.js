@@ -1,21 +1,45 @@
 const fs = require("fs");
 const sequelize = require("sequelize");
 const cloudinary = require("../utils/cloudinaryUpload");
-const Image = require("../models/image");
-const LikeImage = require("../models/likeImage");
-const User = require("../models/user");
+const { Image, LikeImage, User } = require("../models");
+const logger = require("../utils/logger");
 
-exports.getOneImage = async (req, res, next) => {
-  let { id } = req.params;
+const IMAGE_PAGE_LIMIT = 10;
 
-  id = Number.parseInt(id, 10);
+exports.getImagesByPage = async (req, res, next) => {
+  let page = req.query.page || 1;
+
+  page = Number.parseInt(page, 10);
 
   try {
-    if (Number.isNaN(id)) {
+    if (Number.isNaN(page) || page < 1) {
+      throw new Error("Invalid page number");
+    }
+
+    const toSkip = IMAGE_PAGE_LIMIT * (page - 1);
+
+    const images = await Image.findAll({
+      offset: toSkip,
+      limit: IMAGE_PAGE_LIMIT,
+    });
+
+    return res.status(200).json(images);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+exports.getImage = async (req, res, next) => {
+  let { imageId } = req.params;
+
+  imageId = Number.parseInt(imageId, 10);
+
+  try {
+    if (Number.isNaN(imageId)) {
       throw new Error("Invalid imageId");
     }
 
-    const image = await Image.findByPk(id, {
+    const imageDetails = await Image.findByPk(imageId, {
       attributes: {
         include: [
           [
@@ -30,50 +54,22 @@ exports.getOneImage = async (req, res, next) => {
       include: [{ model: User, attributes: ["id", "username"] }],
     });
 
-    return res.status(200).json(image);
-  } catch (error) {
-    return next(error);
-  }
-};
-
-exports.getImagesByPage = async (req, res, next) => {
-  let page = req.query.page || 1;
-
-  page = Number.parseInt(page, 10);
-
-  try {
-    if (Number.isNaN(page) || page < 1) {
-      throw new Error("Invalid page number");
+    if (!imageDetails) {
+      throw new Error("Image not found");
     }
 
-    const toSkip = 10 * (page - 1);
+    // get user liked
+    if (req.session.isLoggedIn) {
+      const userLikedCount = await LikeImage.count({
+        where: { imageId, userId: req.session.user.id },
+      });
 
-    const images = await Image.findAll({ offset: toSkip, limit: 10 });
+      const userLiked = !!userLikedCount;
 
-    return res.status(200).json(images);
-  } catch (error) {
-    return next(error);
-  }
-};
-
-exports.getUserLiked = async (req, res, next) => {
-  let { id: imageId } = req.params;
-  const userId = req.session.user.id;
-
-  imageId = Number.parseInt(imageId, 10);
-
-  try {
-    if (Number.isNaN(imageId)) {
-      throw new Error("Invalid imageId");
+      imageDetails.dataValues.userLiked = userLiked;
     }
 
-    const likesAmount = await LikeImage.count({ where: { imageId, userId } });
-
-    if (likesAmount) {
-      return res.status(200).json({ liked: true });
-    }
-
-    return res.status(200).json({ liked: false });
+    return res.status(200).json(imageDetails);
   } catch (error) {
     return next(error);
   }
@@ -102,7 +98,7 @@ exports.postImage = async (req, res, next) => {
 
     fs.unlink(file.path, (err) => {
       if (err) {
-        console.err(err);
+        logger.error(err);
       }
     });
 
@@ -122,7 +118,7 @@ exports.postImage = async (req, res, next) => {
 };
 
 exports.postLikeImage = async (req, res, next) => {
-  let { imageId } = req.body;
+  let { imageId } = req.params;
   const userId = req.session.user.id;
 
   imageId = Number.parseInt(imageId, 10);
@@ -132,17 +128,19 @@ exports.postLikeImage = async (req, res, next) => {
       throw new Error("Invalid imageId");
     }
 
-    // find likes
-    const likeImage = await LikeImage.findOne({ where: { userId, imageId } });
+    // find if user liked
+    const userLikedCount = await LikeImage.count({
+      where: { userId, imageId },
+    });
 
-    // if doesnt exist, create
-    if (!likeImage) {
+    // if not liked (doesn't exist), create
+    if (!userLikedCount) {
       await LikeImage.create({ userId, imageId });
 
       return res.json({ message: "Image liked" });
     }
 
-    // if exist, delete
+    // if exist, delete like
     await LikeImage.destroy({
       where: {
         userId,

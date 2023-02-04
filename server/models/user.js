@@ -31,6 +31,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    profilePhotoURL: {
+      type: DataTypes.STRING,
+      defaultValue: null,
+    },
   },
   {
     freezeTableName: true,

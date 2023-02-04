@@ -1,16 +1,16 @@
-const User = require("../models/user");
+const { User } = require("../models");
 
-exports.getOneUser = async (req, res, next) => {
-  let { id } = req.params;
+exports.getUser = async (req, res, next) => {
+  let { userId } = req.params;
 
-  id = Number.parseInt(id, 10);
+  userId = Number.parseInt(userId, 10);
 
   try {
-    if (Number.isNaN(id)) {
+    if (Number.isNaN(userId)) {
       throw new Error("Invalid user id");
     }
 
-    const user = await User.findByPk(id, {
+    const user = await User.findByPk(userId, {
       attributes: ["id", "username", "firstName", "lastName"],
     });
 

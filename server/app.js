@@ -9,17 +9,12 @@ const imageRouter = require("./routes/image");
 const userRouter = require("./routes/user");
 
 const errorHandler = require("./utils/errorHandler");
-
-const Image = require("./models/image");
-const User = require("./models/user");
-const PasswordReset = require("./models/passwordReset");
-const LikeImage = require("./models/likeImage");
-const Comment = require("./models/comment");
-const LikeComment = require("./models/likeComment");
+const unknownEndpoint = require("./utils/unknownEndpoint");
+const logger = require("./utils/logger");
 
 const app = express();
 const redisClient = createClient({ legacyMode: true });
-redisClient.connect().catch(console.error);
+redisClient.connect().catch((err) => logger.error(err));
 
 // Middlewares
 app.use(cors({ origin: true, credentials: true }));
@@ -39,31 +34,7 @@ app.use("/image", imageRouter);
 app.use("/user", userRouter);
 
 // Middlewares
+app.use(unknownEndpoint);
 app.use(errorHandler);
-
-// Associations/relationships
-// user 1:M image
-User.hasMany(Image, { foreignKey: "userId" });
-Image.belongsTo(User, {
-  foreignKey: "userId",
-});
-// user 1:1 passwordReset
-User.hasOne(PasswordReset, { foreignKey: "userId" });
-PasswordReset.belongsTo(User, { foreignKey: "userId" });
-// user 1:M likeImage M:1 image
-User.belongsToMany(Image, { through: LikeImage, foreignKey: "userId" });
-Image.belongsToMany(User, { through: LikeImage, foreignKey: "imageId" });
-// user 1:M comment
-User.hasMany(Comment, { foreignKey: "userId" });
-Comment.belongsTo(User, { foreignKey: "userId" });
-// image 1:M comment
-Image.hasMany(Comment, { foreignKey: "imageId" });
-Comment.belongsTo(Image, { foreignKey: "imageId" });
-// comment 1:M comment
-Comment.hasMany(Comment, { foreignKey: "parentCommentId" });
-Comment.belongsTo(Comment, { foreignKey: "parentCommentId" });
-// user 1:M likeComment M:1 comment
-User.belongsToMany(Comment, { through: LikeComment, foreignKey: "userId" });
-Comment.belongsToMany(User, { through: LikeComment, foreignKey: "commentId" });
 
 module.exports = app;

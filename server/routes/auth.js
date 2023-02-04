@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const {
   getRelog,
-  getOneResetPassword,
+  getResetPassword,
   postLogin,
   postLogout,
   postSignup,
@@ -11,13 +11,14 @@ const {
 } = require("../controllers/auth");
 const isAuth = require("../utils/isAuth");
 
+// STARTS WITH /auth
 router.get("/relog", isAuth, getRelog);
-router.get("/resetPassword/:resetToken", getOneResetPassword);
+router.get("/reset-password/:resetToken", getResetPassword);
 
 router.post("/login", postLogin);
 router.post("/logout", isAuth, postLogout);
 router.post("/signup", postSignup);
-router.post("/resetPassword", postResetPassword);
-router.post("/resetPassword/:resetToken", postNewPassword);
+router.post("/reset-password", postResetPassword);
+router.post("/reset-password/:resetToken", postNewPassword);
 
 module.exports = router;

@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const { Op } = require("sequelize");
 
-const User = require("../models/user");
-const PasswordReset = require("../models/passwordReset");
+const { User, PasswordReset } = require("../models");
+const { GMAIL_EMAIL, GMAIL_SECRETS } = require("../utils/config");
 
 // Setting up transporter using gmail: https://www.youtube.com/watch?v=thAP7Fvrql4
 // P.S. Using gmail is not recommended for production. Find other alternative for production.
@@ -13,18 +13,17 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   secure: false,
   auth: {
-    user: process.env.GMAIL_EMAIL,
-    pass: process.env.GMAIL_SECRETS,
+    user: GMAIL_EMAIL,
+    pass: GMAIL_SECRETS,
   },
 });
 
 exports.getRelog = (req, res) =>
   res.json({
     user: req.session.user,
-    isLoggedIn: req.session.isLoggedIn,
   });
 
-exports.getOneResetPassword = async (req, res, next) => {
+exports.getResetPassword = async (req, res, next) => {
   const { resetToken } = req.params;
 
   try {
@@ -38,10 +37,10 @@ exports.getOneResetPassword = async (req, res, next) => {
     });
 
     if (!resetTokenDetails) {
-      throw new Error("Invalid token");
+      throw new Error("Invalid reset token");
     }
 
-    return res.status(200).json({ message: "Valid token" });
+    return res.status(200).json({ message: "Reset token is valid" });
   } catch (error) {
     return next(error);
   }
@@ -51,33 +50,35 @@ exports.postLogin = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const dbUser = await User.findOne({ where: { email } });
+    const userDetails = await User.findOne({ where: { email } });
 
-    const passwordCorrect =
-      dbUser == null ? false : await bcrypt.compare(password, dbUser.password);
+    const isPassword =
+      userDetails == null
+        ? false
+        : await bcrypt.compare(password, userDetails.password);
 
-    if (!passwordCorrect) {
-      throw new Error("Invalid username or password");
+    if (!isPassword) {
+      throw new Error("Invalid email or password");
     }
 
     req.session.isLoggedIn = true;
     req.session.user = {
-      id: dbUser.id,
-      username: dbUser.username,
-      firstName: dbUser.firstName,
-      lastName: dbUser.lastName,
-      email: dbUser.email,
+      id: userDetails.id,
+      username: userDetails.username,
+      firstName: userDetails.firstName,
+      lastName: userDetails.lastName,
+      email: userDetails.email,
     };
 
     return res.json({
       user: {
-        username: dbUser.username,
-        firstName: dbUser.firstName,
-        lastName: dbUser.lastName,
-        email: dbUser.email,
+        username: userDetails.username,
+        firstName: userDetails.firstName,
+        lastName: userDetails.lastName,
+        email: userDetails.email,
       },
       isLoggedIn: true,
-      message: "User login successfully",
+      message: "User logged in successfully",
     });
   } catch (error) {
     return next(error);
@@ -134,7 +135,9 @@ exports.postSignup = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    return res.status(201).json({ message: "User created" });
+    return res.status(201).json({
+      message: "User created",
+    });
   } catch (error) {
     return next(error);
   }
@@ -144,23 +147,23 @@ exports.postResetPassword = async (req, res, next) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const userDetails = await User.findOne({ where: { email } });
 
-    if (!user) {
+    if (!userDetails) {
       throw new Error("User not found");
     }
 
     const hashBuffer = crypto.randomBytes(32);
     const token = hashBuffer.toString("hex");
 
-    const resetToken = await PasswordReset.findOne({
-      where: { userId: user.id },
+    const resetTokenDetails = await PasswordReset.findOne({
+      where: { userId: userDetails.id },
     });
 
-    if (resetToken) {
+    if (resetTokenDetails) {
       const currentDate = new Date();
       const resetTokenExpiryLeft = Math.floor(
-        (resetToken.expiry - currentDate) / 60000
+        (resetTokenDetails.expiry - currentDate) / 60000
       );
 
       if (resetTokenExpiryLeft > 0) {
@@ -175,18 +178,18 @@ exports.postResetPassword = async (req, res, next) => {
           resetToken: token,
           expiry: Date.now() + 3600000,
         },
-        { where: { userId: user.id } }
+        { where: { userId: userDetails.id } }
       );
     } else {
       await PasswordReset.create({
         resetToken: token,
         expiry: Date.now() + 3600000,
-        userId: user.id,
+        userId: userDetails.id,
       });
     }
 
     await transporter.sendMail({
-      from: process.env.GMAIL_EMAIL,
+      from: GMAIL_EMAIL,
       to: email,
       subject: "Password reset",
       text: `Here's the link to reset your password: http://localhost:3000/passwordReset/${token}`,

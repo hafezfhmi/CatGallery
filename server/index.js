@@ -2,17 +2,18 @@ const http = require("http");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "./.env" });
+
 const app = require("./app");
 const db = require("./utils/database");
-
-const PORT = 3001;
+const logger = require("./utils/logger");
+const { PORT } = require("./utils/config");
 
 const server = http.createServer(app);
 
 db.sync().then(() => {
-  console.log("Database synced");
+  logger.info("Database synced");
 
   server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    logger.info(`Server is running on port ${PORT}`);
   });
 });

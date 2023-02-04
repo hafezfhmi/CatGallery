@@ -1,8 +1,7 @@
 const sequelize = require("sequelize");
-const Comment = require("../models/comment");
-const User = require("../models/user");
+const { Comment, User } = require("../models");
 
-const commentPageLimit = 5;
+const COMMENT_PAGE_LIMIT = 6;
 
 const checkCommentNesting = async (parentCommentId) => {
   let level = 1;
@@ -24,16 +23,16 @@ const checkCommentNesting = async (parentCommentId) => {
 };
 
 exports.getCommentsByPage = async (req, res, next) => {
-  let { id: imageId } = req.params;
+  let { imageId } = req.params;
   let parentCommentId = req.query.parentCommentId || null;
   let page = req.query.page || 1;
-  let previousLength = req.query.previousLength || 0;
 
   parentCommentId =
-    parentCommentId === "null" ? null : Number.parseInt(parentCommentId, 10);
+    parentCommentId === "null" || null
+      ? null
+      : Number.parseInt(parentCommentId, 10);
   page = Number.parseInt(page, 10);
   imageId = Number.parseInt(imageId, 10);
-  previousLength = Number.parseInt(previousLength, 10);
 
   try {
     if (Number.isNaN(imageId)) {
@@ -48,28 +47,85 @@ exports.getCommentsByPage = async (req, res, next) => {
       throw new Error("Invalid parentCommentId");
     }
 
-    if (Number.isNaN(previousLength)) {
-      throw new Error("Invalid previousLength");
+    const toSkip = COMMENT_PAGE_LIMIT * (page - 1);
+
+    let comments;
+
+    if (req.session.isLoggedIn) {
+      comments = await Comment.findAll({
+        where: {
+          imageId,
+          parentCommentId,
+        },
+        attributes: {
+          include: [
+            [
+              sequelize.literal(
+                "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+              ),
+              "likeCount",
+            ],
+            [
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id & likeComment.userId = ${req.session.user.id})`
+              ),
+              "userLiked",
+            ],
+          ],
+        },
+        include: [
+          { model: User, attributes: ["id", "username"] },
+          {
+            model: Comment,
+            attributes: {
+              include: [
+                [
+                  sequelize.literal(
+                    "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                  ),
+                  "likeCount",
+                ],
+                [
+                  sequelize.literal(
+                    `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id & likeComment.userId = ${req.session.user.id})`
+                  ),
+                  "userLiked",
+                ],
+              ],
+            },
+            include: [
+              { model: User, attributes: ["id", "username"] },
+              {
+                model: Comment,
+                attributes: {
+                  include: [
+                    [
+                      sequelize.literal(
+                        "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                      ),
+                      "likeCount",
+                    ],
+                    [
+                      sequelize.literal(
+                        `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id & likeComment.userId = ${req.session.user.id})`
+                      ),
+                      "userLiked",
+                    ],
+                  ],
+                },
+                include: { model: User, attributes: ["id", "username"] },
+                limit: COMMENT_PAGE_LIMIT,
+              },
+            ],
+            limit: COMMENT_PAGE_LIMIT,
+          },
+        ],
+        offset: toSkip,
+        limit: COMMENT_PAGE_LIMIT,
+      });
     }
 
-    let extraCommentAmount;
-    let toSkip;
-
-    if (page === 1 && !previousLength) {
-      toSkip = 0;
-      extraCommentAmount = 0;
-    } else {
-      const commentModulus = previousLength % 5;
-      const commentMissing =
-        commentModulus > 0 ? commentPageLimit - commentModulus : 0;
-      toSkip = commentPageLimit * (page - 1) - commentMissing;
-      if (toSkip < 0) {
-        toSkip = commentModulus;
-      }
-      extraCommentAmount = commentModulus > 0 ? commentMissing : 0;
-    }
-
-    const commentList = await Comment.findAll({
+    comments = await Comment.findAll({
       where: {
         imageId,
         parentCommentId,
@@ -98,40 +154,57 @@ exports.getCommentsByPage = async (req, res, next) => {
               ],
             ],
           },
-          include: { model: User },
-          limit: commentPageLimit,
+          include: [
+            { model: User, attributes: ["id", "username"] },
+            {
+              model: Comment,
+              attributes: {
+                include: [
+                  [
+                    sequelize.literal(
+                      "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                    ),
+                    "likeCount",
+                  ],
+                ],
+              },
+              include: { model: User, attributes: ["id", "username"] },
+              limit: COMMENT_PAGE_LIMIT,
+            },
+          ],
+          limit: COMMENT_PAGE_LIMIT,
         },
       ],
       offset: toSkip,
-      limit: commentPageLimit + extraCommentAmount,
+      limit: COMMENT_PAGE_LIMIT,
     });
 
-    return res.status(200).json(commentList);
+    return res.status(200).json(comments);
   } catch (error) {
     return next(error);
   }
 };
 
 exports.postComment = async (req, res, next) => {
-  let { id: imageId } = req.params;
-  const { detail } = req.body;
-  let { parentCommentId } = req.body;
+  let { imageId } = req.params;
+  let { parentCommentId, detail } = req.body;
 
+  imageId = Number.parseInt(imageId, 10);
+  detail = detail.trim();
   parentCommentId =
     parentCommentId === null ? null : Number.parseInt(parentCommentId, 10);
-  imageId = Number.parseInt(imageId, 10);
 
   try {
-    if (!detail) {
-      throw new Error("Invalid comment");
-    }
-
     if (Number.isNaN(imageId)) {
       throw new Error("Invalid imageId");
     }
 
     if (Number.isNaN(parentCommentId) && parentCommentId !== null) {
       throw new Error("Invalid parentCommentId");
+    }
+
+    if (!detail) {
+      throw new Error("Invalid comment");
     }
 
     await checkCommentNesting(parentCommentId);
@@ -149,7 +222,8 @@ exports.postComment = async (req, res, next) => {
       id: req.session.user.id,
       username: req.session.user.username,
     };
-    createdComment.dataValues.likes = 0;
+    createdComment.dataValues.likeCount = 0;
+    createdComment.dataValues.userLiked = false;
 
     return res.status(201).json(createdComment);
   } catch (error) {
