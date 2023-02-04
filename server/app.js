@@ -27,6 +27,11 @@ app.use(
     saveUninitialized: false,
   })
 );
+if (process.env.NODE_ENV === "development") {
+  // eslint-disable-next-line import/no-extraneous-dependencies, global-require
+  const morgan = require("morgan");
+  app.use(morgan("dev"));
+}
 
 // Routes
 app.use("/auth", authRouter);
