@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineMenu } from "react-icons/ai";
+import { useUserContext } from "../../context/userContext";
 import Button from "../Button";
 import styles from "./mobileNav.module.css";
 
 const MobileNav = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const userCtx = useUserContext();
 
   const handleShowMobileNav = () => {
     setShowMobileNav((prevVal) => !prevVal);
@@ -15,30 +17,57 @@ const MobileNav = () => {
     setShowMobileNav(false);
   };
 
+  const handleLogout = () => {
+    userCtx.logout();
+  };
+
   return (
     <>
-      <ul
-        className={
-          styles.mobileNav + " " + (showMobileNav ? styles.active : "")
-        }
+      <nav
+        className={`${styles.mobileNav} ${showMobileNav ? styles.active : ""}`}
       >
-        <li>
-          <Link to={"/"} onClick={handleClickNav}>
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link to={"/"} onClick={handleClickNav}>
-            Gallery
-          </Link>
-        </li>
-        <li>
-          <Link to={"login"} onClick={handleClickNav}>
-            Log in
-          </Link>
-        </li>
-        <Button to={"signup"} label="Sign up" onClick={handleClickNav} />
-      </ul>
+        <ul className={styles.navList}>
+          <li>
+            <Link to={"/"} onClick={handleClickNav}>
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to={"/gallery"} onClick={handleClickNav}>
+              Gallery
+            </Link>
+          </li>
+
+          {!userCtx.isLoggedIn ? (
+            <>
+              <li>
+                <Link to={"/auth/login"} onClick={handleClickNav}>
+                  Log in
+                </Link>
+              </li>
+              <Button
+                to={"/auth/signup"}
+                label="Sign up"
+                onClick={handleClickNav}
+              />
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to={"/image/create"} onClick={handleClickNav}>
+                  Create
+                </Link>
+              </li>
+              <li>
+                <Link to={"/profile"} onClick={handleClickNav}>
+                  Profile
+                </Link>
+              </li>
+              <li onClick={handleLogout}>Log out</li>
+            </>
+          )}
+        </ul>
+      </nav>
 
       <AiOutlineMenu
         className={styles.burgerButton}

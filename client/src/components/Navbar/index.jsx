@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { UseUserContext } from "../../context/userContext";
+import { useUserContext } from "../../context/userContext";
 import { CgProfile } from "react-icons/cg";
 
 import MobileNav from "../MobileNav";
@@ -11,15 +11,21 @@ import catLogo from "../../assets/cat-head.webp";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const userCtx = UseUserContext();
+  const userCtx = useUserContext();
 
   useEffect(() => {
-    window.onscroll = () => {
+    function navScroll() {
       if (window.scrollY > 50) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
+    }
+
+    window.addEventListener("scroll", navScroll);
+
+    return () => {
+      window.removeEventListener("scroll", navScroll);
     };
   }, []);
 
@@ -28,53 +34,61 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={styles.navbar + " " + (scrolled ? styles.scrolled : "")}>
-      <div className={styles.wrapper}>
+    <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
+      <div className={styles.navbarWrapper}>
         <Link to={"/"} className={styles.logoWrapper}>
           <img src={catLogo} alt="cat logo" />
           <div>
-            {/* <span>Meow</span> Gallery */}
             <span>Meow</span>Gallery
           </div>
         </Link>
 
-        <ul className={styles.nav}>
-          <li>
-            <Link to={"/"}>Home</Link>
-          </li>
-          <li>
-            <Link to={"/gallery"}>Gallery</Link>
-          </li>
-          {userCtx.isLoggedIn ? (
-            <Popover
-              trigger={
-                <li className={styles.navProfile}>
-                  <Link to={"/profile"}>
-                    <CgProfile />
-                  </Link>
-                </li>
-              }
-            >
-              <ul className={styles.navPopoverList}>
+        <nav>
+          <ul className={styles.navList}>
+            <li>
+              <Link to={"/"}>Home</Link>
+            </li>
+            <li>
+              <Link to={"/gallery"}>Gallery</Link>
+            </li>
+
+            {!userCtx.isLoggedIn ? (
+              <>
                 <li>
-                  <Link to={"/profile"}>Profile</Link>
+                  <Link to={"/auth/login"}>Log in</Link>
                 </li>
-                <li onClick={handleLogout}>Log out</li>
-              </ul>
-            </Popover>
-          ) : (
-            <>
-              <li>
-                <Link to={"login"}>Log in</Link>
-              </li>
-              <Button to={"signup"} label="Sign up" />
-            </>
-          )}
-        </ul>
+                <Button to={"/auth/signup"} label="Sign up" />
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to={"/image/create"}>Create</Link>
+                </li>
+
+                <Popover
+                  trigger={
+                    <li className={styles.navProfile}>
+                      <Link to={"/profile"}>
+                        <CgProfile />
+                      </Link>
+                    </li>
+                  }
+                >
+                  <ul className={styles.navPopoverList}>
+                    <li>
+                      <Link to={"/profile"}>Profile</Link>
+                    </li>
+                    <li onClick={handleLogout}>Log out</li>
+                  </ul>
+                </Popover>
+              </>
+            )}
+          </ul>
+        </nav>
 
         <MobileNav />
       </div>
-    </nav>
+    </header>
   );
 };
 

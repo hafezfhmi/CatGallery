@@ -1,8 +1,7 @@
 .navbar {
-  height: 64px;
   position: sticky;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.797);
+  background-color: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   z-index: 100;
 }
@@ -11,10 +10,11 @@
   box-shadow: 0 0.0625rem 0.625rem 0 rgb(0 0 0 / 20%);
 }
 
-.wrapper {
-  height: inherit;
+.navbarWrapper {
+  height: 4rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 2rem;
 }
 
@@ -37,11 +37,10 @@
   display: block;
 }
 
-.nav {
+.navList {
   display: flex;
   align-items: center;
   column-gap: 1rem;
-  margin-left: auto;
   font-size: 1.2rem;
   font-weight: 500;
 }
@@ -65,8 +64,14 @@
   margin-bottom: 0;
 }
 
-@media only screen and (max-width: 900px) {
-  .nav {
+@media screen and (max-width: 768px) {
+  .navList {
     display: none;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .navbarWrapper {
+    padding: 0 1rem;
   }
 }

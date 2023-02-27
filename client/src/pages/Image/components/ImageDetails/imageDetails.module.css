@@ -1,0 +1,62 @@
+.imageDetails {
+  min-width: 0;
+  flex: 1;
+}
+
+.imageDetails h1 {
+  font-size: 1.6rem;
+}
+
+.imageDetails h2 {
+  font-size: 1.2rem;
+}
+
+.imageDetails > * {
+  margin-bottom: 1.2rem;
+}
+
+.user {
+  background-color: rgb(39, 123, 234);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 25rem;
+}
+
+.user > img {
+  width: 2.2rem;
+  height: 2.2rem;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+  user-select: none;
+}
+
+.user {
+  color: #fff;
+  padding-right: 1rem;
+}
+
+.likeContainer {
+  display: flex;
+  align-items: center;
+  column-gap: 0.6rem;
+}
+
+.likeContainer > svg {
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.likeContainer > p {
+  padding-top: 0.5rem;
+}
+
+.unliked {
+  stroke: #000;
+  stroke-width: 0.14rem;
+}
+
+.unliked > path {
+  fill: #fff;
+}

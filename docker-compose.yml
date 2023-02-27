@@ -23,7 +23,7 @@ services:
     restart: always
     ports:
       - 8080:8080
-  
+
   redis:
     image: redis:7.0
     restart: always
@@ -31,7 +31,6 @@ services:
       - 6379:6379
     volumes:
       - redis:/data
-
 
 secrets:
   db_root_password:

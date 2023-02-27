@@ -1,0 +1,10 @@
+.image {
+  display: flex;
+  column-gap: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  .image {
+    flex-direction: column;
+  }
+}

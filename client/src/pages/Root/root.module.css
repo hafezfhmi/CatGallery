@@ -1,0 +1,19 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  padding: 2rem;
+}
+
+@media screen and (max-width: 425px) {
+  .mainContainer {
+    padding: 1rem;
+  }
+}

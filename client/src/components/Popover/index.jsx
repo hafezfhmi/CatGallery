@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./popover.module.css";
 
 const Popover = ({ trigger, children }) => {
@@ -31,7 +31,7 @@ const Popover = ({ trigger, children }) => {
   }, []);
 
   return (
-    <div className={styles.popoverContainer}>
+    <div className={styles.popoverWrapper}>
       <div ref={triggerElement}>{trigger}</div>
       <div
         className={

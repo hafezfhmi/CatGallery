@@ -1,0 +1,35 @@
+.imageUploadForm {
+  display: flex;
+  column-gap: 2rem;
+}
+
+.fileDropWrapper {
+  min-height: 26rem;
+  width: 40%;
+  border-radius: 1.2rem;
+}
+
+.inputWrapper {
+  flex: 1;
+  margin-left: 2rem;
+}
+
+.inputWrapper textarea {
+  height: 10rem;
+}
+
+@media only screen and (max-width: 768px) {
+  .imageUploadForm {
+    flex-direction: column;
+  }
+
+  .fileDropWrapper {
+    flex-basis: 26rem;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .inputWrapper {
+    margin-left: 0;
+  }
+}

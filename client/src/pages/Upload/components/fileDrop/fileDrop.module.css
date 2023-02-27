@@ -1,0 +1,60 @@
+.fileDrop {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  border-radius: 2rem;
+  background-color: rgb(240, 240, 240);
+  cursor: pointer;
+}
+
+.imageWrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.imageWrapper img {
+  width: 100%;
+}
+
+.close {
+  background-color: #fff;
+  border-radius: 1.2rem;
+  position: absolute;
+  top: 1rem;
+  right: 1.4rem;
+  font-size: 1.6rem;
+  padding: 0.6rem;
+  box-sizing: content-box;
+}
+
+.close:hover {
+  background-color: #ddd;
+}
+
+.fileDropWrapperBorder {
+  width: calc(100% - 4rem);
+  height: calc(100% - 4rem);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 1.2rem;
+  border: 0.2rem dashed rgb(160, 160, 160);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 1rem;
+  color: rgb(100, 100, 100);
+}
+
+.fileDropWrapperBorder svg {
+  font-size: 2rem;
+}
+
+.fileDrop input {
+  display: none;
+}

@@ -4,7 +4,7 @@ const cloudinary = require("../utils/cloudinaryUpload");
 const { Image, LikeImage, User } = require("../models");
 const logger = require("../utils/logger");
 
-const IMAGE_PAGE_LIMIT = 10;
+const IMAGE_PAGE_LIMIT = 15;
 
 exports.getImagesByPage = async (req, res, next) => {
   let page = req.query.page || 1;
@@ -55,7 +55,9 @@ exports.getImage = async (req, res, next) => {
     });
 
     if (!imageDetails) {
-      throw new Error("Image not found");
+      const error = new Error("Image not found");
+      error.httpStatusCode = 404;
+      throw error;
     }
 
     // get user liked

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -6,51 +5,53 @@ import {
   Route,
 } from "react-router-dom";
 
-import Root from "./routes/Root";
-import Login from "./routes/Login";
-import Signup from "./routes/Signup";
-import Home from "./routes/Home";
-import Gallery from "./routes/Gallery";
-import Upload from "./routes/Upload";
-import PasswordReset from "./routes/PasswordReset";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import Image from "./routes/Image";
+import Root from "./pages/Root";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Home from "./pages/Home";
+import Gallery from "./pages/Gallery";
+import Upload from "./pages/Upload";
+import PasswordReset from "./pages/PasswordReset";
+import ProtectedRoute from "./pages/ProtectedRoute";
+import Image from "./pages/Image";
 
 const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <>
-        <Route path="/" element={<Root />}>
-          <Route index element={<Home />} />
-          <Route path="passwordReset/:tokenId" element={<PasswordReset />} />
-          <Route
-            path="login"
-            element={
-              <ProtectedRoute isLogged={false}>
-                <Login />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="signup"
-            element={
-              <ProtectedRoute isLogged={false}>
-                <Signup />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="gallery" element={<Gallery />} />
-          <Route path="/image/:id" element={<Image />} />
-          <Route
-            path="upload"
-            element={
-              <ProtectedRoute>
-                <Upload />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
-      </>
+      <Route path="/" element={<Root />}>
+        <Route index element={<Home />} />
+
+        <Route
+          path="/auth/signup"
+          element={
+            <ProtectedRoute isLogged={false}>
+              <Signup />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/auth/login"
+          element={
+            <ProtectedRoute isLogged={false}>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/auth/reset/:tokenId" element={<PasswordReset />} />
+
+        <Route path="/gallery" element={<Gallery />} />
+
+        <Route
+          path="/image/create"
+          element={
+            <ProtectedRoute>
+              <Upload />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/image/:id" element={<Image />} />
+      </Route>
     )
   );
 

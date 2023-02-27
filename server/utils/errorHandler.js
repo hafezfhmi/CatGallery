@@ -4,5 +4,7 @@ const logger = require("./logger");
 module.exports = (error, req, res, next) => {
   logger.error(error);
 
-  res.status(400).send({ message: error.message });
+  return res
+    .status(error.httpStatusCode || 400)
+    .send({ message: error.message });
 };

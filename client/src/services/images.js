@@ -2,31 +2,26 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:3001/image";
 
-const getAll = (page = 1) => {
+const getImagesByPage = (page = 1) => {
   return axios.get(`${baseUrl}?page=${page}`).then((response) => response.data);
 };
 
-const getOne = (id) => {
-  return axios.get(`${baseUrl}/${id}`).then((response) => response.data);
-};
-
-const getUserLiked = (id) => {
+const getImage = (id) => {
   return axios
-    .get(`${baseUrl}/${id}/userLiked`, {
-      withCredentials: true,
-    })
+    .get(`${baseUrl}/${id}`, { withCredentials: true })
     .then((response) => response.data);
 };
 
-const getComments = (imageId, parentCommentId, page, previousLength) => {
+const getCommentsByPage = (imageId, parentCommentId, page) => {
   return axios
     .get(
-      `${baseUrl}/${imageId}/comments?parentCommentId=${parentCommentId}&page=${page}&previousLength=${previousLength}`
+      `${baseUrl}/${imageId}/comments?parentCommentId=${parentCommentId}&page=${page}`,
+      { withCredentials: true }
     )
     .then((response) => response.data);
 };
 
-const createImage = (title, description, file) => {
+const postImage = (title, description, file) => {
   return axios
     .post(
       baseUrl,
@@ -45,10 +40,10 @@ const createImage = (title, description, file) => {
     .then((response) => response.data);
 };
 
-const createComment = (detail, imageId, parentCommentId) => {
+const postComment = (detail, imageId, parentCommentId) => {
   return axios
     .post(
-      `${baseUrl}/${imageId}/comments`,
+      `${baseUrl}/${imageId}/comment`,
       {
         detail,
         parentCommentId,
@@ -60,11 +55,11 @@ const createComment = (detail, imageId, parentCommentId) => {
     .then((response) => response.data);
 };
 
-const likeOne = (id) => {
+const postLikeImage = (imageId) => {
   return axios
     .post(
-      `${baseUrl}/likes`,
-      { imageId: id },
+      `${baseUrl}/${imageId}/like`,
+      {},
       {
         withCredentials: true,
       }
@@ -72,14 +67,46 @@ const likeOne = (id) => {
     .then((response) => response.data);
 };
 
+const postLikeComment = (imageId, commentId) => {
+  return axios
+    .post(
+      `${baseUrl}/${imageId}/comment/${commentId}/like`,
+      {},
+      {
+        withCredentials: true,
+      }
+    )
+    .then((response) => response.data);
+};
+
+const putComment = (detail, imageId, commentId) => {
+  return axios
+    .patch(
+      `${baseUrl}/${imageId}/comment/${commentId}`,
+      { detail },
+      { withCredentials: true }
+    )
+    .then((response) => response.data);
+};
+
+const deleteComment = (imageId, commentId) => {
+  return axios
+    .delete(`${baseUrl}/${imageId}/comment/${commentId}`, {
+      withCredentials: true,
+    })
+    .then((response) => response.data);
+};
+
 const imageServices = {
-  getAll,
-  getOne,
-  getUserLiked,
-  getComments,
-  createImage,
-  createComment,
-  likeOne,
+  getImagesByPage,
+  getImage,
+  getCommentsByPage,
+  postImage,
+  postComment,
+  putComment,
+  postLikeImage,
+  postLikeComment,
+  deleteComment,
 };
 
 export default imageServices;

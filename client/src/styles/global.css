@@ -11,27 +11,27 @@ html {
 *:before,
 *:after {
   box-sizing: inherit;
+  overflow-wrap: anywhere;
 }
 
 body {
   font-family: "Mukta", sans-serif;
-  max-width: 2140px;
   margin: 0 auto;
 }
 
-@media only screen and (min-width: 1800px) {
+@media only screen and (min-width: 1440px) {
   html {
     font-size: 118.75%; /* 19px */
   }
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 768px) {
   html {
     font-size: 87.5%; /* 14px */
   }
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 425px) {
   html {
     font-size: 81.25%; /* 13px */
   }

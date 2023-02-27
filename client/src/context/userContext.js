@@ -4,7 +4,7 @@ import authServices from "../services/auth";
 
 const UserContext = React.createContext();
 
-export function UseUserContext() {
+export function useUserContext() {
   return useContext(UserContext);
 }
 
@@ -14,40 +14,46 @@ export const UserContextProvider = (props) => {
   const [isLogging, setIsLogging] = useState(true);
 
   useEffect(() => {
+    let ignore = false;
+
     const fetchUserLoginStatus = async () => {
       try {
-        const userLoginStatus = await authServices.relog();
+        const user = await authServices.relog();
 
-        setUser(userLoginStatus.user);
-        setIsLoggedIn(userLoginStatus.isLoggedIn);
-        setIsLogging(false);
+        if (!ignore) {
+          setUser(user.user);
+          setIsLoggedIn(true);
+          setIsLogging(false);
+        }
       } catch (error) {
-        setIsLogging(false);
+        if (!ignore) {
+          setIsLogging(false);
+        }
       }
     };
 
     fetchUserLoginStatus();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   let login = async (email, password) => {
-    let userLoginStatus = await authServices.login(email, password);
+    await authServices.login(email, password);
 
-    if (userLoginStatus.isLoggedIn) {
-      setUser(userLoginStatus.user);
-      setIsLoggedIn(userLoginStatus.isLoggedIn);
-    }
+    window.location.reload();
   };
 
   let logout = async () => {
     await authServices.logout();
 
-    setUser(null);
-    setIsLoggedIn(false);
+    window.location.reload();
   };
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, isLoggedIn, isLogging, login, logout }}
+      value={{ user, isLoggedIn, isLogging, login, logout }}
     >
       {props.children}
     </UserContext.Provider>

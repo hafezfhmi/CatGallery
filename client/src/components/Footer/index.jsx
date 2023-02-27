@@ -1,13 +1,12 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./footer.module.css";
 import catHead from "../../assets/cat-head.webp";
 
 const Footer = () => {
   return (
-    <div className={styles.footer + " section"}>
+    <footer className={styles.footer}>
       <div className={styles.footerNav}>
-        <div className={styles.footerLogo}>
+        <div>
           <Link to={"/"} className={styles.logoWrapper}>
             <img src={catHead} alt="cat logo" />
             <div>
@@ -20,15 +19,23 @@ const Footer = () => {
           <div className={styles.footerList}>
             <p>Navigation</p>
             <ul>
-              <Link to={"/"}>Home</Link>
-              <Link to={"gallery"}>Gallery</Link>
+              <li>
+                <Link to={"/"}>Home</Link>
+              </li>
+              <li>
+                <Link to={"/gallery"}>Gallery</Link>
+              </li>
             </ul>
           </div>
           <div className={styles.footerList}>
             <p>Company</p>
             <ul>
-              <Link to={"/"}>About</Link>
-              <Link to={"/"}>Terms and conditions</Link>
+              <li>
+                <Link to={"/"}>About</Link>
+              </li>
+              <li>
+                <Link to={"/"}>Terms and conditions</Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -37,7 +44,7 @@ const Footer = () => {
       <div className={styles.copyright}>
         <p>© MeowGallery 2023. All rights reserved.</p>
       </div>
-    </div>
+    </footer>
   );
 };
 

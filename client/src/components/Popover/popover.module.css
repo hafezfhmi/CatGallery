@@ -1,4 +1,4 @@
-.popoverContainer {
+.popoverWrapper {
   position: relative;
 }
 
@@ -29,6 +29,6 @@
   left: 0;
 }
 
-.popoverContainer:hover .popover {
+.popoverWrapper:hover .popover {
   visibility: visible;
 }

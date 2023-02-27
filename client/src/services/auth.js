@@ -20,16 +20,14 @@ const signup = (
   password,
   confirmPassword
 ) => {
-  return axios
-    .post(`${baseUrl}/signup`, {
-      username,
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword,
-    })
-    .then((response) => response.data);
+  return axios.post(`${baseUrl}/signup`, {
+    username,
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword,
+  });
 };
 
 const relog = () => {
@@ -39,16 +37,14 @@ const relog = () => {
 };
 
 const checkPasswordResetValidity = (resetToken) => {
-  return axios.get(`${baseUrl}/resetPassword/${resetToken}`);
+  return axios.get(`${baseUrl}/reset-password/${resetToken}`);
 };
 
 const passwordReset = (resetToken, password, confirmPassword) => {
-  return axios
-    .post(`${baseUrl}/resetPassword/${resetToken}`, {
-      password,
-      confirmPassword,
-    })
-    .then((response) => response.data);
+  return axios.post(`${baseUrl}/reset-password/${resetToken}`, {
+    password,
+    confirmPassword,
+  });
 };
 
 const authServices = {

@@ -77,7 +77,6 @@ exports.postLogin = async (req, res, next) => {
         lastName: userDetails.lastName,
         email: userDetails.email,
       },
-      isLoggedIn: true,
       message: "User logged in successfully",
     });
   } catch (error) {
@@ -150,7 +149,9 @@ exports.postResetPassword = async (req, res, next) => {
     const userDetails = await User.findOne({ where: { email } });
 
     if (!userDetails) {
-      throw new Error("User not found");
+      const error = new Error("User not found");
+      error.httpStatusCode = 404;
+      throw error;
     }
 
     const hashBuffer = crypto.randomBytes(32);
@@ -192,7 +193,7 @@ exports.postResetPassword = async (req, res, next) => {
       from: GMAIL_EMAIL,
       to: email,
       subject: "Password reset",
-      text: `Here's the link to reset your password: http://localhost:3000/passwordReset/${token}`,
+      text: `Here's the link to reset your password: http://localhost:3000/auth/reset/${token}`,
     });
 
     return res

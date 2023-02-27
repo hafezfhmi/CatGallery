@@ -1,11 +1,8 @@
-import React from "react";
 import reactDom from "react-dom";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineWarning } from "react-icons/ai";
 import styles from "./errorModal.module.css";
 
-import errorIcon from "../../assets/error.webp";
-
-const ErrorModal = ({ errorMsg, disableError }) => {
+const ErrorModal = ({ errorMsg, disableError = null }) => {
   const disableParentEvent = (e) => {
     e.stopPropagation();
   };
@@ -13,10 +10,16 @@ const ErrorModal = ({ errorMsg, disableError }) => {
   return (
     <>
       {reactDom.createPortal(
-        <div className={styles.errorModal} onClick={disableError}>
+        <div
+          className={styles.errorModal}
+          onClick={disableError ? disableError : () => {}}
+        >
           <div className={styles.card} onClick={disableParentEvent}>
-            <AiOutlineClose className={styles.close} onClick={disableError} />
-            <img src={errorIcon} alt="error icon" />
+            {disableError && (
+              <AiOutlineClose className={styles.close} onClick={disableError} />
+            )}
+            <AiOutlineWarning className={styles.warn} />
+
             <h1>Something went wrong!</h1>
             <p>{errorMsg}</p>
           </div>
