@@ -36,6 +36,12 @@ const relog = () => {
     .then((response) => response.data);
 };
 
+const forgotPassword = (email) => {
+  return axios.post(`${baseUrl}/reset-password`, {
+    email,
+  });
+};
+
 const checkPasswordResetValidity = (resetToken) => {
   return axios.get(`${baseUrl}/reset-password/${resetToken}`);
 };
@@ -52,6 +58,7 @@ const authServices = {
   logout,
   signup,
   relog,
+  forgotPassword,
   checkPasswordResetValidity,
   passwordReset,
 };

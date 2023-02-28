@@ -70,7 +70,7 @@ const LoginForm = ({ disableError = null }) => {
         <Button label="Log in" style={{ marginTop: "1.2rem", width: "100%" }} />
 
         <div className={styles.extraWrapper}>
-          <Link to={"/forgot-password"}>Forgot Password</Link>
+          <Link to={"/auth/forgot-password"}>Forgot Password</Link>
           <p>
             Don't have an account? <Link to={"/signup"}>Sign up</Link>
           </p>

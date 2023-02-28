@@ -14,6 +14,7 @@ import Upload from "./pages/Upload";
 import PasswordReset from "./pages/PasswordReset";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Image from "./pages/Image";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -34,6 +35,14 @@ const App = () => {
           element={
             <ProtectedRoute isLogged={false}>
               <Login />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/auth/forgot-password"
+          element={
+            <ProtectedRoute isLogged={false}>
+              <ForgotPassword />
             </ProtectedRoute>
           }
         />
