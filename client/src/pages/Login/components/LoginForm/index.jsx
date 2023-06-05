@@ -72,7 +72,7 @@ const LoginForm = ({ disableError = null }) => {
         <div className={styles.extraWrapper}>
           <Link to={"/auth/forgot-password"}>Forgot Password</Link>
           <p>
-            Don't have an account? <Link to={"/signup"}>Sign up</Link>
+            Don't have an account? <Link to={"/auth/signup"}>Sign up</Link>
           </p>
         </div>
       </form>
