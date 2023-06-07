@@ -10,6 +10,8 @@ const {
   DB_HOST,
   DB_PORT,
   DB_DIALECT,
+  REDIS_HOST,
+  REDIS_PORT,
   PORT,
 } = process.env;
 
@@ -25,5 +27,7 @@ module.exports = {
   DB_HOST,
   DB_PORT,
   DB_DIALECT,
+  REDIS_HOST,
+  REDIS_PORT,
   PORT,
 };

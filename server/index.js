@@ -1,5 +1,6 @@
 const http = require("http");
 const dotenv = require("dotenv");
+const { redisClient } = require("./utils/redis");
 
 dotenv.config({ path: "./.env" });
 
@@ -10,10 +11,28 @@ const { PORT } = require("./utils/config");
 
 const server = http.createServer(app);
 
-db.sync().then(() => {
-  logger.info("Database synced");
-
-  server.listen(PORT, () => {
-    logger.info(`Server is running on port ${PORT}`);
+const shutdown = () => {
+  server.close(() => {
+    logger.info("Server closed");
+    process.exit(0);
   });
-});
+};
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
+
+const initialize = async () => {
+  try {
+    await redisClient.connect();
+    await db.sync();
+
+    server.listen(PORT, () => {
+      logger.info(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    logger.error("Error during initialization:", error);
+    process.exit(1);
+  }
+};
+
+initialize();

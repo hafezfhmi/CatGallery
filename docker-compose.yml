@@ -2,6 +2,15 @@
 version: "3.1"
 
 services:
+  server:
+    image: hafezfhmi/meow-gallery-server
+    build:
+      context: ./server
+    ports:
+      - 3001:3001
+    env_file:
+      - ./server/.env
+
   db:
     image: mysql:8.0.30
     restart: always
