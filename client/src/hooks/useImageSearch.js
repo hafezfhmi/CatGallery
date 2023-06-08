@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import imageServices from "../services/images";
 
-const useImageSearch = (pageNumber) => {
+const useImageSearch = (pageNumber, request, userId) => {
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [hasMore, setHasMore] = useState(false);
@@ -12,7 +11,12 @@ const useImageSearch = (pageNumber) => {
     setLoading(true);
 
     const fetchData = async () => {
-      let images = await imageServices.getImagesByPage(pageNumber);
+      let images;
+      if (userId) {
+        images = await request(pageNumber, userId);
+      } else {
+        images = await request(pageNumber);
+      }
 
       if (!ignore) {
         setImages((prev) => [
@@ -30,7 +34,7 @@ const useImageSearch = (pageNumber) => {
     return () => {
       ignore = true;
     };
-  }, [pageNumber]);
+  }, [pageNumber, request, userId]);
 
   return { loading, images, hasMore };
 };

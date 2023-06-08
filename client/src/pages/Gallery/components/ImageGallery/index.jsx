@@ -3,13 +3,17 @@ import { Link } from "react-router-dom";
 import useImageSearch from "../../../../hooks/useImageSearch";
 import styles from "./imageGallery.module.css";
 
-const ImageGallery = () => {
+const ImageGallery = ({ request, userId }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const [columnCount, setColumnCount] = useState(4);
 
   const observer = useRef();
 
-  const { images, hasMore, loading } = useImageSearch(pageNumber);
+  const { images, hasMore, loading } = useImageSearch(
+    pageNumber,
+    request,
+    userId
+  );
 
   useEffect(() => {
     const columnCountUpdater = () => {

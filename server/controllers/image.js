@@ -7,6 +7,7 @@ const logger = require("../utils/logger");
 const IMAGE_PAGE_LIMIT = 15;
 
 exports.getImagesByPage = async (req, res, next) => {
+  const { userId } = req.query;
   let page = req.query.page || 1;
 
   page = Number.parseInt(page, 10);
@@ -16,12 +17,16 @@ exports.getImagesByPage = async (req, res, next) => {
       throw new Error("Invalid page number");
     }
 
-    const toSkip = IMAGE_PAGE_LIMIT * (page - 1);
-
-    const images = await Image.findAll({
-      offset: toSkip,
+    const queryOptions = {
+      offset: IMAGE_PAGE_LIMIT * (page - 1),
       limit: IMAGE_PAGE_LIMIT,
-    });
+    };
+
+    if (userId) {
+      queryOptions.where = { userId };
+    }
+
+    const images = await Image.findAll(queryOptions);
 
     return res.status(200).json(images);
   } catch (error) {

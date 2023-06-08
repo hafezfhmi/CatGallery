@@ -15,6 +15,7 @@ import PasswordReset from "./pages/PasswordReset";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Image from "./pages/Image";
 import ForgotPassword from "./pages/ForgotPassword";
+import User from "./pages/User";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -60,6 +61,8 @@ const App = () => {
         />
 
         <Route path="/image/:id" element={<Image />} />
+
+        <Route path="/user/:userId" element={<User />} />
       </Route>
     )
   );

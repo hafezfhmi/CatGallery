@@ -6,6 +6,12 @@ const getImagesByPage = (page = 1) => {
   return axios.get(`${baseUrl}?page=${page}`).then((response) => response.data);
 };
 
+const getUserImagesByPage = (page = 1, userId) => {
+  return axios
+    .get(`${baseUrl}?page=${page}&userId=${userId}`)
+    .then((response) => response.data);
+};
+
 const getImage = (id) => {
   return axios
     .get(`${baseUrl}/${id}`, { withCredentials: true })
@@ -99,6 +105,7 @@ const deleteComment = (imageId, commentId) => {
 
 const imageServices = {
   getImagesByPage,
+  getUserImagesByPage,
   getImage,
   getCommentsByPage,
   postImage,

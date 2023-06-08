@@ -1,0 +1,22 @@
+.displayUser {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.displayUser > img {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  object-fit: contain;
+  margin-bottom: 1.2rem;
+}
+
+.displayUser > h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.displayUser > h2 {
+  color: #878a8c;
+}
