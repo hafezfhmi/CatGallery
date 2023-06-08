@@ -3,7 +3,7 @@ version: "3.1"
 
 services:
   server:
-    image: hafezfhmi/meow-gallery-server
+    image: hafezfhmi/dev-meow-gallery-server
     build:
       context: ./server
       dockerfile: dev.Dockerfile
