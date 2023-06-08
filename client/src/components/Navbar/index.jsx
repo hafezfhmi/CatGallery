@@ -68,7 +68,7 @@ const Navbar = () => {
                 <Popover
                   trigger={
                     <li className={styles.navProfile}>
-                      <Link to={"/profile"}>
+                      <Link to={`/user/${userCtx.user.id}`}>
                         <CgProfile />
                       </Link>
                     </li>
@@ -76,7 +76,7 @@ const Navbar = () => {
                 >
                   <ul className={styles.navPopoverList}>
                     <li>
-                      <Link to={"/profile"}>Profile</Link>
+                      <Link to={`/user/${userCtx.user.id}`}>Profile</Link>
                     </li>
                     <li onClick={handleLogout}>Log out</li>
                   </ul>

@@ -59,7 +59,7 @@ const MobileNav = () => {
                 </Link>
               </li>
               <li>
-                <Link to={"/profile"} onClick={handleClickNav}>
+                <Link to={`/user/${userCtx.user.id}`} onClick={handleClickNav}>
                   Profile
                 </Link>
               </li>
