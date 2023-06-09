@@ -1,4 +1,4 @@
-# Starting the container
+# Starting the container for backend server
 
 - Development mode:
 
@@ -7,6 +7,12 @@
 - Production mode:
 
       docker-compose -f docker-compose.yml up
+
+# Starting the frontend client
+
+Navigate to the client directory and run:
+
+      npm run start
 
 # Adding dependencies in development
 
