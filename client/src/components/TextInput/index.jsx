@@ -11,7 +11,7 @@ const TextInput = ({ field, label, type = "input" }) => {
       break;
     default:
       inputMarkup = (
-        <input className={styles.textInput} {...field.attributes} novalidate />
+        <input className={styles.textInput} {...field.attributes} noValidate />
       );
   }
 

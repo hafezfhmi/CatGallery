@@ -95,7 +95,7 @@ const SignupForm = () => {
         confirmPassword.attributes.value
       );
 
-      navigate("/signup-validation");
+      navigate("/auth/login");
     } catch (err) {
       error.handleError(true, err?.response?.data?.message || err.message);
     }
