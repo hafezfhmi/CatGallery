@@ -11,13 +11,13 @@ const FAQItem = ({ question, answer }) => {
 
   return (
     <div className={styles.faqItem}>
-      <p onClick={handleShow} className={show && styles.active}>
+      <p onClick={handleShow} className={show ? styles.active : ""}>
         {question}
         <AiFillCaretDown
-          className={styles.caretDown + " " + (show && styles.active)}
+          className={styles.caretDown + " " + (show ? styles.active : "")}
         />
       </p>
-      <div className={styles.answer + " " + (show && styles.active)}>
+      <div className={styles.answer + " " + (show ? styles.active : "")}>
         <p>{answer}</p>
       </div>
     </div>
