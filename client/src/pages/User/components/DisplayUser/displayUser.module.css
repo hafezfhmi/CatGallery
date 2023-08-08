@@ -20,3 +20,71 @@
 .displayUser > h2 {
   color: #878a8c;
 }
+
+/* btn container */
+
+.edit_btn_container {
+  width: 20%;
+  padding: 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* btn styling */
+
+.edit_profile {
+  display: block;
+  width: 130px;
+  height: 50px;
+  background-color: #5885af;
+  color: #fff;
+  font-size: medium;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.edit_profile:hover {
+  background-color: #41729f;
+}
+
+.edit_profile:active {
+  background-color: #38638a;
+}
+
+/* form for updating user profile 📃📃*/
+.update_form {
+  padding: 10px;
+  width: 40%;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.edit_profile_btn_group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit_profile_form {
+  width: 50%;
+}
+
+.edit_prof_input {
+  display: block;
+  width: 100%;
+  margin: 10px auto;
+  font-size: large;
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #6a6969;
+}
+
+.edit_form_label {
+  font-size: larger;
+  font-weight: bold;
+}

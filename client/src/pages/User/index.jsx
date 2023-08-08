@@ -16,12 +16,10 @@ const User = () => {
 
     const fetchData = async (userId) => {
       fetchedUser = await userServices.getUser(userId);
-
       if (!ignore) setUser(fetchedUser);
     };
 
     fetchData(userId);
-
     return () => {
       ignore = true;
     };
