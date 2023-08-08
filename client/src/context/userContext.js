@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import authServices from "../services/auth";
-
+import userServices from "../services/user";
 const UserContext = React.createContext();
 
 export function useUserContext() {
@@ -51,9 +51,16 @@ export const UserContextProvider = (props) => {
     window.location.reload();
   };
 
+  // update user
+  let updateUser = async (data) => {
+    await userServices.updateUser(data);
+
+    window.location.reload();
+  };
+
   return (
     <UserContext.Provider
-      value={{ user, isLoggedIn, isLogging, login, logout }}
+      value={{ user, isLoggedIn, isLogging, login, logout, updateUser }}
     >
       {props.children}
     </UserContext.Provider>

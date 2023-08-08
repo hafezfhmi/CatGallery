@@ -11,7 +11,7 @@ exports.getUser = async (req, res, next) => {
     }
 
     const user = await User.findByPk(userId, {
-      attributes: ["id", "username", "firstName", "lastName"],
+      attributes: ["id", "username", "firstName", "lastName", "email"],
     });
 
     if (!user) {
@@ -24,4 +24,29 @@ exports.getUser = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
+};
+
+exports.updateUser = async (req, res) => {
+  let { userId } = req.params;
+  userId = Number.parseInt(userId, 10);
+  // console.log(userId);
+
+  await User.update(
+    {
+      email: req.body.email,
+      username: req.body.username,
+      firstName: req.body.fname,
+      lastName: req.body.lname,
+    },
+    {
+      where: {
+        id: userId,
+      },
+    }
+  );
+
+  return res.status(200).json({
+    status: "success",
+    message: "Updated successfully",
+  });
 };
