@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3001/image";
+const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL}/image`;
 
 const getImagesByPage = (page = 1) => {
   return axios.get(`${baseUrl}?page=${page}`).then((response) => response.data);
@@ -22,7 +22,7 @@ const getCommentsByPage = (imageId, parentCommentId, page) => {
   return axios
     .get(
       `${baseUrl}/${imageId}/comments?parentCommentId=${parentCommentId}&page=${page}`,
-      { withCredentials: true }
+      { withCredentials: true },
     )
     .then((response) => response.data);
 };
@@ -41,7 +41,7 @@ const postImage = (title, description, file) => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     )
     .then((response) => response.data);
 };
@@ -56,7 +56,7 @@ const postComment = (detail, imageId, parentCommentId) => {
       },
       {
         withCredentials: true,
-      }
+      },
     )
     .then((response) => response.data);
 };
@@ -68,7 +68,7 @@ const postLikeImage = (imageId) => {
       {},
       {
         withCredentials: true,
-      }
+      },
     )
     .then((response) => response.data);
 };
@@ -80,7 +80,7 @@ const postLikeComment = (imageId, commentId) => {
       {},
       {
         withCredentials: true,
-      }
+      },
     )
     .then((response) => response.data);
 };
@@ -90,7 +90,7 @@ const putComment = (detail, imageId, commentId) => {
     .patch(
       `${baseUrl}/${imageId}/comment/${commentId}`,
       { detail },
-      { withCredentials: true }
+      { withCredentials: true },
     )
     .then((response) => response.data);
 };

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3001/auth";
+const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL}/auth`;
 
 const login = (email, password) => {
   return axios
@@ -18,7 +18,7 @@ const signup = (
   lastName,
   email,
   password,
-  confirmPassword
+  confirmPassword,
 ) => {
   return axios.post(`${baseUrl}/signup`, {
     username,
