@@ -9,6 +9,7 @@ services:
       dockerfile: dev.Dockerfile
     ports:
       - 3001:3001
+    restart: always
     env_file:
       - ./server/.env
     environment:
