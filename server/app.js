@@ -14,7 +14,13 @@ const { redisClient } = require("./utils/redis");
 const app = express();
 
 // Middlewares
-app.use(cors({ origin: true, credentials: true }));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "development" ? true : process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(
   session({
@@ -22,7 +28,7 @@ app.use(
     secret: "cat",
     resave: false,
     saveUninitialized: false,
-  })
+  }),
 );
 if (process.env.NODE_ENV === "development") {
   // eslint-disable-next-line import/no-extraneous-dependencies, global-require

@@ -16,6 +16,9 @@ services:
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - db
+      - redis
 
   db:
     image: mysql:8.0.30
