@@ -14,10 +14,10 @@ const { redisClient } = require("./utils/redis");
 const app = express();
 
 // Middlewares
+// If FRONTEND_URL is not specified(development environment), it will allow cors from all origin
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "development" ? true : process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || true,
     credentials: true,
   }),
 );

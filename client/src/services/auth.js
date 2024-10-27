@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL}/auth`;
+const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"}/auth`;
 
 const login = (email, password) => {
   return axios

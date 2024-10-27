@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL}/image`;
+const baseUrl = `http://${process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"}/image`;
 
 const getImagesByPage = (page = 1) => {
   return axios.get(`${baseUrl}?page=${page}`).then((response) => response.data);
