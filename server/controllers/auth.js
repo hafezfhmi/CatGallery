@@ -18,6 +18,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const FRONTEND_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : process.env.FRONTEND_URL;
+
 exports.getRelog = (req, res) =>
   res.json({
     user: req.session.user,
@@ -119,7 +124,7 @@ exports.postSignup = async (req, res, next) => {
     // Check if username is valid
     if (!/^[a-zA-Z0-9]+$/.test(username)) {
       throw new Error(
-        "Invalid username. Username must contains only alphabetical characters and numbers"
+        "Invalid username. Username must contains only alphabetical characters and numbers",
       );
     }
 
@@ -164,12 +169,12 @@ exports.postResetPassword = async (req, res, next) => {
     if (resetTokenDetails) {
       const currentDate = new Date();
       const resetTokenExpiryLeft = Math.floor(
-        (resetTokenDetails.expiry - currentDate) / 60000
+        (resetTokenDetails.expiry - currentDate) / 60000,
       );
 
       if (resetTokenExpiryLeft > 0) {
         throw new Error(
-          `You had requested a password reset earlier. Please try again in ${resetTokenExpiryLeft} minutes.`
+          `You had requested a password reset earlier. Please try again in ${resetTokenExpiryLeft} minutes.`,
         );
       }
 
@@ -179,7 +184,7 @@ exports.postResetPassword = async (req, res, next) => {
           resetToken: token,
           expiry: Date.now() + 3600000,
         },
-        { where: { userId: userDetails.id } }
+        { where: { userId: userDetails.id } },
       );
     } else {
       await PasswordReset.create({
@@ -193,7 +198,7 @@ exports.postResetPassword = async (req, res, next) => {
       from: GMAIL_EMAIL,
       to: email,
       subject: "Password reset",
-      text: `Here's the link to reset your password: http://localhost:3000/auth/reset/${token}`,
+      text: `Here's the link to reset your password: ${FRONTEND_URL}/auth/reset/${token}`,
     });
 
     return res
@@ -237,7 +242,7 @@ exports.postNewPassword = async (req, res, next) => {
         where: {
           id: resetTokenDetails.userId,
         },
-      }
+      },
     );
 
     await PasswordReset.destroy({
