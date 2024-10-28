@@ -61,13 +61,13 @@ exports.getCommentsByPage = async (req, res, next) => {
           include: [
             [
               sequelize.literal(
-                "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)",
               ),
               "likeCount",
             ],
             [
               sequelize.literal(
-                `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id AND likeComment.userId = ${req.session.user.id})`
+                `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id AND likeComment.userId = ${req.session.user.id})`,
               ),
               "userLiked",
             ],
@@ -81,13 +81,13 @@ exports.getCommentsByPage = async (req, res, next) => {
               include: [
                 [
                   sequelize.literal(
-                    "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                    "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)",
                   ),
                   "likeCount",
                 ],
                 [
                   sequelize.literal(
-                    `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id & likeComment.userId = ${req.session.user.id})`
+                    `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id AND likeComment.userId = ${req.session.user.id})`,
                   ),
                   "userLiked",
                 ],
@@ -101,13 +101,13 @@ exports.getCommentsByPage = async (req, res, next) => {
                   include: [
                     [
                       sequelize.literal(
-                        "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                        "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)",
                       ),
                       "likeCount",
                     ],
                     [
                       sequelize.literal(
-                        `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id & likeComment.userId = ${req.session.user.id})`
+                        `(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id AND likeComment.userId = ${req.session.user.id})`,
                       ),
                       "userLiked",
                     ],
@@ -133,7 +133,7 @@ exports.getCommentsByPage = async (req, res, next) => {
           include: [
             [
               sequelize.literal(
-                "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)",
               ),
               "likeCount",
             ],
@@ -147,7 +147,7 @@ exports.getCommentsByPage = async (req, res, next) => {
               include: [
                 [
                   sequelize.literal(
-                    "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                    "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)",
                   ),
                   "likeCount",
                 ],
@@ -161,7 +161,7 @@ exports.getCommentsByPage = async (req, res, next) => {
                   include: [
                     [
                       sequelize.literal(
-                        "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)"
+                        "(SELECT COUNT(*) FROM likeComment WHERE likeComment.commentId = comment.id)",
                       ),
                       "likeCount",
                     ],
